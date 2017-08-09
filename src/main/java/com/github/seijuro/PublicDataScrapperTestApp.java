@@ -14,19 +14,34 @@ import lombok.Getter;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.*;
 
 public class PublicDataScrapperTestApp {
     @Getter(AccessLevel.PUBLIC)
     static final String serviceKeyProperty="service.key";
 
+    /**
+     * App parameter options
+     */
+    enum Options {
+        SERVICEKEY_FILEPATH("--servicekey"),
+        ADDRESS_FILEPATH("--address");
+
+        @Getter(AccessLevel.PUBLIC)
+        final String optionString;
+
+        Options(String opt) {
+            this.optionString = opt;
+        }
+    }
+
+    /**
+     * Instance Properties
+     */
     private final List<PublicDataAPITask> tasks;
     private KeyFile keyFile;
     private String addressFile;
-
-    private static Queue<String> queueSequenceId = new LinkedList<String>();
+    private BlockingQueue<String> queue = new LinkedBlockingDeque<>();
 
     /**
      * C'tor
@@ -39,7 +54,7 @@ public class PublicDataScrapperTestApp {
 
     private BusinessPlaceDetailAPITask createBusinessPlaceDetailAPITask() {
         try {
-            BusinessPlaceDetailAPITask task = new BusinessPlaceDetailAPITask(keyFile.getKey(getServiceKeyProperty()), queueSequenceId);
+            BusinessPlaceDetailAPITask task = new BusinessPlaceDetailAPITask(keyFile.getKey(getServiceKeyProperty()), queue);
             task.setDelegater(new PublicDataAPIResultDelegater() {
                 @Override
                 public void handleHTTPResponse(String url, int code, String response) {
@@ -87,24 +102,17 @@ public class PublicDataScrapperTestApp {
 
                 @Override
                 public void handleHTTPErrorResponse(String url, int code, String response, String errmsg) {
-                    //  do nothing;
                 }
 
                 @Override
                 synchronized public void handleResult(String url, PublicDataAPIResult result) {
                     List<BusinessPlaceData> data = result.getData(BusinessPlaceData.class);
-
-
                     for (BusinessPlaceData datum : data) {
-                        queueSequenceId.offer(datum.getId());
-
-//                        System.out.println(datum.toString());
                     }
                 }
 
                 @Override
                 public void handleErrorResult(String url, PublicDataAPIErrorResult result) {
-                    //  do nothing;
                 }
             });
 
@@ -117,43 +125,20 @@ public class PublicDataScrapperTestApp {
         return null;
     }
 
-    private void execute() {
-        try {
-            //  #1
-            {
-                PublicDataAPITask apiTask = createBusinessPlaceAPITask();
-                tasks.add(apiTask);
-            }
-
-            //  #2
-            {
-                PublicDataAPITask apiTask = createBusinessPlaceDetailAPITask();
-                tasks.add(apiTask);
-            }
-
-            ExecutorService executors = Executors.newFixedThreadPool(2);
-            tasks.forEach(task -> executors.execute(task));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void createTasks() throws Exception {
+        tasks.add(createBusinessPlaceAPITask());
+        tasks.add(createBusinessPlaceDetailAPITask());
     }
 
-    enum Options {
-        SERVICEKEY_FILEPATH("--servicekey"),
-        ADDRESS_FILEPATH("--address");
-
-        @Getter(AccessLevel.PUBLIC)
-        final String optionString;
-
-        Options(String opt) {
-            this.optionString = opt;
-        }
+    private void execute() {
+        ExecutorService executors = Executors.newFixedThreadPool(2);
+        tasks.forEach(task -> executors.execute(task));
     }
 
     public static void main(String[] args) {
         String keyFilepath = null;
         String addressFilepath = null;
+        List<String> seqs = Collections.synchronizedList(new LinkedList<>());
 
         for (int index = 0; index < args.length; ++index) {
             String current = args[index];
@@ -166,10 +151,18 @@ public class PublicDataScrapperTestApp {
             }
         }
 
+        //  TODO check illegal argument(s)
+
         System.out.println("servicekey.filepath : " + keyFilepath);
         System.out.println("address.filepath : " + addressFilepath);
 
-        PublicDataScrapperTestApp scraper = new PublicDataScrapperTestApp(keyFilepath, addressFilepath);
-        scraper.execute();
+        try {
+            PublicDataScrapperTestApp scraper = new PublicDataScrapperTestApp(keyFilepath, addressFilepath);
+            scraper.createTasks();
+            scraper.execute();
+        }
+        catch (Exception excp) {
+            excp.printStackTrace();
+        }
     }
 }
