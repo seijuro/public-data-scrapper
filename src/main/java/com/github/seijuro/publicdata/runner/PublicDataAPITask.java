@@ -14,11 +14,49 @@ import com.github.seijuro.publicdata.parser.PublicDataAPIResponseParser;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 public abstract class PublicDataAPITask implements PublicDataAPIRunnable, PublicDataAPIServiceKeySupplier, IPublicDataAPIConfigSupplier {
     /**
+     * enum RunningState
+     */
+    protected enum RunningState {
+        RUNNING,
+        STOP,
+        SHUTDOWN;
+    }
+
+    @ToString
+    protected class RequestState {
+        /**
+         * Instance Properties
+         */
+        @Setter
+        private int maxTry = 0;
+        private int currentTry = 0;
+        @Getter @Setter
+        private boolean success = false;
+
+        public void incrementTry() {
+            ++this.currentTry;
+        }
+
+        public void reset() {
+            this.currentTry = 0;
+            this.success = false;
+        }
+
+        public boolean shouldRetry() {
+            return !isSuccess() && (currentTry < this.maxTry);
+        }
+    }
+
+    /**
      * Instance Properties
      */
+    protected RunningState runningState = RunningState.RUNNING;
+    protected RequestState requestState = new RequestState();
+
     @Getter(AccessLevel.PROTECTED)
     private final PublicDataAPIServices apiService;
     @Getter(AccessLevel.PROTECTED)
@@ -27,8 +65,8 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
     private final PublicDataAPI api;
     @Setter(AccessLevel.PUBLIC)
     private PublicDataAPIResultDelegater delegater;
-    @Getter(AccessLevel.PUBLIC)
     @Setter(AccessLevel.PUBLIC)
+    @Getter(AccessLevel.PUBLIC)
     private PublicDataAPIServiceKeySupplier serviceKeySupplier;
 
     /**
@@ -38,21 +76,31 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
         this.apiService = apiService;
         this.parser = PublicDataAPIResponseParserFactory.create(apiService);
         this.api = PublicDataAPIFactory.create(apiService);
+        this.runningState = RunningState.RUNNING;
+    }
+
+    public void handleLoop() {
+        requestState.reset();
+
+        do {
+            request(getApi(), getServiceKey(this.apiService), getNextConfig());
+        } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
     }
 
     /**
-     * implements PublicDataAPIServiceKeySupplier
+     * implements <code>PublicDataAPIServiceKeySupplier</code> interface.
      *
+     * @param apiService
      * @return
      */
-    public String getServiceKey() {
-        PublicDataAPIServiceKeySupplier serviceKeySupplier = getServiceKeySupplier();
-        return (serviceKeySupplier == null) ? null : serviceKeySupplier.getServiceKey(getApiService());
+    @Override
+    public String getServiceKey(PublicDataAPIServices apiService) {
+        return serviceKeySupplier.getServiceKey(apiService);
     }
 
     @Override
     public void run() {
-        request(getApi(), getServiceKey(this.apiService), getNextConfig());
+        handleLoop();
     }
 
     /**
@@ -103,5 +151,31 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
         catch (Exception excp) {
             excp.printStackTrace();
         }
+    }
+
+    @Override
+    public void handleHTTPResponse(String url, int code, String response) {
+    }
+
+    @Override
+    public void handleHTTPErrorResponse(String url, int code, String response, String errmsg) {
+        requestState.setSuccess(false);
+        requestState.incrementTry();
+    }
+
+    @Override
+    public void handleResult(String url, PublicDataAPIResult result) {
+        requestState.setSuccess(true);
+    }
+
+    @Override
+    public void handleErrorResult(String url, PublicDataAPIErrorResult result) {
+        requestState.setSuccess(false);
+        requestState.incrementTry();
+    }
+
+    @Override
+    public void shutdown() {
+        this.runningState = RunningState.SHUTDOWN;
     }
 }
