@@ -76,6 +76,25 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
         this.runningState = RunningState.RUNNING;
     }
 
+    /**
+     * This method is called by run method.
+     * If run method wrapped this method with loop, this method would be called multiple-times.
+     * i.e
+     * {@code @Override public void run() {
+     *      try {
+     *          do {
+     *              handleLoop()
+     *          } while (true)
+     *      }
+     *      catch (InterruptedException excp) {
+     *          excp.printStackTrace();
+     *      }
+     * }}
+     * Otherwise, this method would be called just once.
+     * That is, How many time would be called totally depends on run method.
+     *
+     * @throws InterruptedException
+     */
     public void handleLoop() throws InterruptedException {
         requestState.reset();
 
