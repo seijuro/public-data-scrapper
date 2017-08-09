@@ -12,11 +12,10 @@ import com.github.seijuro.task.BusinessPlaceDetailAPITask;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class PublicDataScrapperTestApp {
+public class PublicDataScrapperApp {
     @Getter(AccessLevel.PUBLIC)
     static final String serviceKeyProperty="service.key";
 
@@ -46,7 +45,7 @@ public class PublicDataScrapperTestApp {
     /**
      * C'tor
      */
-    public PublicDataScrapperTestApp(String serviceKeyFile, String $addressFile) {
+    public PublicDataScrapperApp(String serviceKeyFile, String $addressFile) {
         tasks = new ArrayList<>();
         keyFile = new KeyFile(serviceKeyFile);
         addressFile = $addressFile;
@@ -108,6 +107,8 @@ public class PublicDataScrapperTestApp {
                 synchronized public void handleResult(String url, PublicDataAPIResult result) {
                     List<BusinessPlaceData> data = result.getData(BusinessPlaceData.class);
                     for (BusinessPlaceData datum : data) {
+                        //  TODO remove ... (written for test)
+//                        queue.offer(datum.getId());
                     }
                 }
 
@@ -157,7 +158,7 @@ public class PublicDataScrapperTestApp {
         System.out.println("address.filepath : " + addressFilepath);
 
         try {
-            PublicDataScrapperTestApp scraper = new PublicDataScrapperTestApp(keyFilepath, addressFilepath);
+            PublicDataScrapperApp scraper = new PublicDataScrapperApp(keyFilepath, addressFilepath);
             scraper.createTasks();
             scraper.execute();
         }
