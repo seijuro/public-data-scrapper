@@ -55,22 +55,22 @@ public class BusinessPlaceDetailAPITask extends PublicDataAPITask {
     }
 
     @Override
-    public void handleHTTPResponse(int code, String response) {
+    public void handleHTTPResponse(String url, int code, String response) {
         System.out.println("BusinessPlaceDetailAPIRunnable::handleHTTPResponse -> code : " + code + ", response : " + response);
     }
 
     @Override
-    public void handleHTTPErrorResponse(int code, String response, String errmsg) {
+    public void handleHTTPErrorResponse(String url, int code, String response, String errmsg) {
         System.out.println("BusinessPlaceDetailAPIRunnable::handleHTTPErrorResponse -> code : " + code + ", response : " + response + "\nerror message : " + errmsg);
     }
 
     @Override
-    public void handleResult(PublicDataAPIResult result) {
+    public void handleResult(String url, PublicDataAPIResult result) {
         System.out.println(result.toString());
     }
 
     @Override
-    public void handleErrorResult(PublicDataAPIErrorResult result) {
+    public void handleErrorResult(String url, PublicDataAPIErrorResult result) {
         System.out.println(result.toString());
     }
 

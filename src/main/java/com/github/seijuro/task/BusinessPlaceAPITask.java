@@ -161,17 +161,17 @@ public class BusinessPlaceAPITask extends PublicDataAPITask {
     }
 
     @Override
-    public void handleHTTPResponse(int code, String response) {
+    public void handleHTTPResponse(String url, int code, String response) {
     }
 
     @Override
-    public void handleHTTPErrorResponse(int code, String response, String errmsg) {
+    public void handleHTTPErrorResponse(String url, int code, String response, String errmsg) {
         requestState.setSuccess(false);
         requestState.incrementRetry();
     }
 
     @Override
-    public void handleResult(PublicDataAPIResult result) {
+    public void handleResult(String url, PublicDataAPIResult result) {
         requestState.setSuccess(true);
         pageState.setCurrentPage(result.getPageNo());
         pageState.setCurrentResult(result.getNumberOfRows());
@@ -182,7 +182,7 @@ public class BusinessPlaceAPITask extends PublicDataAPITask {
     }
 
     @Override
-    public void handleErrorResult(PublicDataAPIErrorResult result) {
+    public void handleErrorResult(String url, PublicDataAPIErrorResult result) {
         requestState.setSuccess(false);
         requestState.incrementRetry();
     }

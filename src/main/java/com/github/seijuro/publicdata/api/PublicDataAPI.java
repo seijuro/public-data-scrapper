@@ -53,6 +53,17 @@ public class PublicDataAPI extends RestfulAPI {
         return url;
     }
 
+    public String getURL() {
+        try {
+            return createRequestGETURL();
+        }
+        catch (UnsupportedEncodingException excp) {
+            excp.printStackTrace();
+        }
+
+        return null;
+    }
+
     public void setConfig(PublicDataAPIConfig config) {
         super.setProperties(config.getProperties());
     }

@@ -3,8 +3,6 @@ package com.github.seijuro.publicdata.runner;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
 import com.github.seijuro.publicdata.api.*;
 import com.github.seijuro.publicdata.api.config.*;
-import com.konantech.seijuro.publicdata.api.*;
-import com.konantech.seijuro.publicdata.api.config.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

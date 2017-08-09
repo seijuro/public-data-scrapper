@@ -65,6 +65,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
 
             if (config != null) {
                 RestfulAPIResponse response = api.request();
+                String url = api.getURL();
 
                 if (response instanceof RestfulAPIErrorResponse) {
                     RestfulAPIErrorResponse errorResponse = (RestfulAPIErrorResponse) response;
@@ -72,16 +73,16 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
                     String res = errorResponse.getResponse();
                     String msg = errorResponse.getMessage();
 
-                    handleHTTPErrorResponse(status, res, msg);
+                    handleHTTPErrorResponse(url, status, res, msg);
 
-                    if (this.delegater != null) { this.delegater.handleHTTPErrorResponse(status, res, msg); }
+                    if (this.delegater != null) { this.delegater.handleHTTPErrorResponse(url, status, res, msg); }
                 }
                 else {
                     int status = response.getHttpResponseCode();
                     String res = response.getResponse();
 
-                    handleHTTPResponse(status, res);
-                    if (this.delegater != null) { this.delegater.handleHTTPResponse(status, res); }
+                    handleHTTPResponse(url, status, res);
+                    if (this.delegater != null) { this.delegater.handleHTTPResponse(url, status, res); }
 
                     this.parser.parse(InputType.TEXT, response.getResponse());
                     PublicDataAPIResult result = this.parser.getResult();
@@ -89,12 +90,12 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
                     if (result instanceof PublicDataAPIErrorResult) {
                         PublicDataAPIErrorResult errRet = (PublicDataAPIErrorResult) result;
 
-                        handleErrorResult(errRet);
-                        if (this.delegater != null) { this.delegater.handleErrorResult(errRet); }
+                        handleErrorResult(url, errRet);
+                        if (this.delegater != null) { this.delegater.handleErrorResult(url,errRet); }
                     }
                     else {
-                        handleResult(result);
-                        if (this.delegater != null) { this.delegater.handleResult(result); }
+                        handleResult(url, result);
+                        if (this.delegater != null) { this.delegater.handleResult(url, result); }
                     }
                 }
             }

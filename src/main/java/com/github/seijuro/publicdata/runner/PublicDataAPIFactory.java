@@ -3,7 +3,6 @@ package com.github.seijuro.publicdata.runner;
 import com.github.seijuro.publicdata.PublicDataAPIException;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
 import com.github.seijuro.publicdata.api.*;
-import com.konantech.seijuro.publicdata.api.*;
 
 public class PublicDataAPIFactory {
     public static PublicDataAPI create(PublicDataAPIServices type) throws PublicDataAPIException {
