@@ -9,5 +9,6 @@ public interface PublicDataAPIRunnable<T extends PublicDataAPIResult> extends Ru
     public abstract void handleResult(String url, PublicDataAPIResult result);
     public abstract void handleErrorResult(String url, PublicDataAPIErrorResult result);
 
+    public abstract void handleLoop() throws InterruptedException;
     public abstract void shutdown();
 }

@@ -4,17 +4,10 @@ import com.github.seijuro.publicdata.PublicDataAPIException;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
 import com.github.seijuro.publicdata.address.LegalDongAddress;
 import com.github.seijuro.publicdata.address.reader.LegalDongAddressReader;
-import com.github.seijuro.publicdata.api.PublicDataAPI;
 import com.github.seijuro.publicdata.api.config.BusinessPlaceAPIConfig;
 import com.github.seijuro.publicdata.api.config.ConfigProperty;
 import com.github.seijuro.publicdata.api.config.PublicDataAPIConfig;
-import com.github.seijuro.publicdata.result.PublicDataAPIErrorResult;
-import com.github.seijuro.publicdata.result.PublicDataAPIResult;
 import com.github.seijuro.publicdata.runner.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.io.IOException;
 

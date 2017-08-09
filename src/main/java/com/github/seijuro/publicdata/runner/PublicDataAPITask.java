@@ -76,7 +76,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
         this.runningState = RunningState.RUNNING;
     }
 
-    public void handleLoop() {
+    public void handleLoop() throws InterruptedException {
         requestState.reset();
 
         do {
@@ -90,7 +90,12 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
 
     @Override
     public void run() {
-        handleLoop();
+        try {
+            handleLoop();
+        }
+        catch (InterruptedException excp) {
+            excp.printStackTrace();
+        }
     }
 
     /**

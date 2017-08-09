@@ -64,11 +64,16 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
 
     @Override
     public void run() {
-        handleLoop();
+        try {
+            handleLoop();
+        }
+        catch (InterruptedException excp) {
+            excp.printStackTrace();
+        }
     }
 
     @Override
-    public void handleLoop() {
+    public void handleLoop() throws InterruptedException {
         requestState.reset();
 
         PublicDataAPI api = getApi();

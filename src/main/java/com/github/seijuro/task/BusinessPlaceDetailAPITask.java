@@ -57,35 +57,29 @@ public class BusinessPlaceDetailAPITask extends PublicDataAPILoopTask {
     }
 
     @Override
-    public void handleLoop() {
-        try {
-            String seq = seqs.poll(5, TimeUnit.SECONDS);
-            if (seq == null) {
-                System.out.println("There are no sequence id during the last 5 second(s).");
+    public void handleLoop() throws InterruptedException {
+        String seq = seqs.poll(5, TimeUnit.SECONDS);
+        if (seq == null) {
+            System.out.println("There are no sequence id during the last 5 second(s).");
 
-                return;
+            return;
+        }
+
+        requestState.reset();
+
+        do {
+            PublicDataAPI api = getApi();
+            String serviceKey = getServiceKey(getApiService());
+
+            PublicDataAPIConfig config = getNextConfig();
+            config.setProperty(BusinessPlaceDetailAPIConfig.Property.ID, seq);
+
+            while (config == null) {
+                Thread.sleep(DateUtils.MILLIS_PER_SECOND * 3);
+                config = getNextConfig();
             }
 
-            requestState.reset();
-
-            do {
-                PublicDataAPI api = getApi();
-                String serviceKey = getServiceKey(getApiService());
-
-                PublicDataAPIConfig config = getNextConfig();
-                config.setProperty(BusinessPlaceDetailAPIConfig.Property.ID, seq);
-
-                while (config == null) {
-                    Thread.sleep(DateUtils.MILLIS_PER_SECOND * 3);
-                    config = getNextConfig();
-                }
-
-                request(api, serviceKey, config);
-            } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
-        }
-        catch (InterruptedException excp) {
-            excp.printStackTrace();
-            runningState = RunningState.STOP;
-        }
+            request(api, serviceKey, config);
+        } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
     }
 }

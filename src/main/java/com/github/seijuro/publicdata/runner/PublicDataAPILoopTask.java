@@ -22,8 +22,13 @@ public abstract class PublicDataAPILoopTask extends PublicDataAPITask {
 
     @Override
     public void run() {
-        do {
-            handleLoop();
-        } while (runningState == RunningState.RUNNING);
+        try {
+            do {
+                handleLoop();
+            } while (runningState == RunningState.RUNNING);
+        }
+        catch (InterruptedException excp) {
+            excp.printStackTrace();
+        }
     }
 }
