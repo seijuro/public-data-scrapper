@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implements PublicDataAPIPageable {
+public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implements PublicDataAPIPageableKeySupplier {
     @ToString
     protected class PagingState {
         PagingState(int initPage, int size) {
@@ -25,8 +25,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
          */
         private final int initPageIndex;
 
-        @Getter
-        @Setter
+        @Getter @Setter
         int currentPage = 0;
         @Getter @Setter
         int pageSize = 0;
@@ -49,7 +48,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
     /**
      * Instance Properties
      */
-    protected PagingState pageState = new PagingState(1, 10);
+    protected PagingState pageState;
 
     /**
      * C'tor
@@ -59,6 +58,8 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
      */
     public PublicDataAPIPageableTask(PublicDataAPIServices apiService) throws PublicDataAPIException {
         super(apiService);
+
+        pageState = new PagingState(1, getDefaultPageSize());
     }
 
     @Override
@@ -77,7 +78,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
         ConfigProperty pageNumberKey = getPageNumberKey();
 
         String prop = config.getProperty(pageSizeKey, String.class);
-        int pageSize = prop != null ? Integer.parseInt(prop) : 100;
+        int pageSize = prop != null ? Integer.parseInt(prop) : getDefaultPageSize();
 
         pageState.reset();
         pageState.setPageSize(pageSize);
@@ -109,9 +110,6 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
         pageState.setCurrentPage(result.getPageNo());
         pageState.setCurrentResult(result.getNumberOfRows());
         pageState.setTotalCount(result.getTotalCount());
-
-        System.out.println(requestState.toString());
-        System.out.println(pageState.toString());
     }
 
     @Override

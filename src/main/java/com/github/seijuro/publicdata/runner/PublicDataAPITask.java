@@ -65,9 +65,6 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
     private final PublicDataAPI api;
     @Setter(AccessLevel.PUBLIC)
     private PublicDataAPIResultDelegater delegater;
-    @Setter(AccessLevel.PUBLIC)
-    @Getter(AccessLevel.PUBLIC)
-    private PublicDataAPIServiceKeySupplier serviceKeySupplier;
 
     /**
      * C'tor
@@ -83,19 +80,12 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
         requestState.reset();
 
         do {
-            request(getApi(), getServiceKey(this.apiService), getNextConfig());
-        } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
-    }
+            PublicDataAPI api = getApi();
+            String serviceKey = getServiceKey(apiService);
+            PublicDataAPIConfig config = getNextConfig();
 
-    /**
-     * implements <code>PublicDataAPIServiceKeySupplier</code> interface.
-     *
-     * @param apiService
-     * @return
-     */
-    @Override
-    public String getServiceKey(PublicDataAPIServices apiService) {
-        return serviceKeySupplier.getServiceKey(apiService);
+            request(api, serviceKey, config);
+        } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
     }
 
     @Override

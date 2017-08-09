@@ -10,9 +10,7 @@ import com.github.seijuro.publicdata.api.config.ConfigProperty;
 import com.github.seijuro.publicdata.api.config.PublicDataAPIConfig;
 import com.github.seijuro.publicdata.result.PublicDataAPIErrorResult;
 import com.github.seijuro.publicdata.result.PublicDataAPIResult;
-import com.github.seijuro.publicdata.runner.PublicDataAPILoopTask;
-import com.github.seijuro.publicdata.runner.PublicDataAPIPageableLoopTask;
-import com.github.seijuro.publicdata.runner.PublicDataAPITask;
+import com.github.seijuro.publicdata.runner.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,12 +23,28 @@ public class BusinessPlaceAPITask extends PublicDataAPIPageableLoopTask {
      * Instance Properties
      */
     private LegalDongAddressReader addressReader = null;
+    private PublicDataAPIServiceKeySupplier serviceKeySupplier = null;
 
     /**
      * C'tor
+     *
+     * @param $serviceKey
+     * @throws PublicDataAPIException
      */
-    public BusinessPlaceAPITask() throws PublicDataAPIException {
+    public BusinessPlaceAPITask(final String $serviceKey) throws PublicDataAPIException {
+        this(apiService -> $serviceKey);
+    }
+
+    /**
+     * C'tor
+     *
+     * @param $serviceKeySupplier
+     * @throws PublicDataAPIException
+     */
+    public BusinessPlaceAPITask(PublicDataAPIServiceKeySupplier $serviceKeySupplier) throws PublicDataAPIException {
         super(PublicDataAPIServices.NPS_BUSINESS_PLACE_NORMAL);
+
+        serviceKeySupplier = $serviceKeySupplier;
     }
 
     public void setAddressFile(String filepath) throws IOException {
@@ -47,6 +61,11 @@ public class BusinessPlaceAPITask extends PublicDataAPIPageableLoopTask {
      * @return
      */
     @Override
+    public int getDefaultPageSize() {
+        return 1000;
+    }
+
+    @Override
     public ConfigProperty getPageSizeKey() {
         return BusinessPlaceAPIConfig.Property.NUM_OF_ROWS;
     }
@@ -54,6 +73,17 @@ public class BusinessPlaceAPITask extends PublicDataAPIPageableLoopTask {
     @Override
     public ConfigProperty getPageNumberKey() {
         return BusinessPlaceAPIConfig.Property.PAGE_NO;
+    }
+
+    /**
+     * implements <code>PublicDataAPIServiceKeySupplier</code> interface.
+     *
+     * @param apiService
+     * @return
+     */
+    @Override
+    public String getServiceKey(PublicDataAPIServices apiService) {
+        return serviceKeySupplier.getServiceKey(apiService);
     }
 
     @Override

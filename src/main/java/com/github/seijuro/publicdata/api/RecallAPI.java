@@ -51,9 +51,6 @@ public class RecallAPI extends PublicDataAPI {
 
         String url = sb.toString();
 
-        //  TODO remove ...
-        System.out.println("api url : " + url);
-
         return url;
     }
 }
