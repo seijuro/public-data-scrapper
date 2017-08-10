@@ -20,7 +20,7 @@ public class BusinessPlaceData extends NPSData {
     @Getter(AccessLevel.PUBLIC)
     private final String registrationNumber;
     @Getter(AccessLevel.PUBLIC)
-    private final String addrStreet;
+    private final String addrRoad;
     @Getter(AccessLevel.PUBLIC)
     private final String statusCode;
     @Getter(AccessLevel.PUBLIC)
@@ -28,7 +28,7 @@ public class BusinessPlaceData extends NPSData {
     @Getter(AccessLevel.PUBLIC)
     private final String addrCodeDG;
     @Getter(AccessLevel.PUBLIC)
-    private final String addrCodeSGG;
+    private final String addrCodeSGGU;
     @Getter(AccessLevel.PUBLIC)
     private final String addrCodeEMD;
 
@@ -44,11 +44,11 @@ public class BusinessPlaceData extends NPSData {
         this.createdDatedYM = builder.createdDatedYM;
         this.name = builder.name;
         this.registrationNumber = builder.registrationNumber;
-        this.addrStreet = builder.addrStreet;
+        this.addrRoad = builder.addrStreet;
         this.statusCode = builder.statusCode;
         this.divisionCode = builder.divisionCode;
         this.addrCodeDG = builder.addrCodeDG;
-        this.addrCodeSGG = builder.addrCodeSGG;
+        this.addrCodeSGGU = builder.addrCodeSGG;
         this.addrCodeEMD = builder.addrCodeEMD;
     }
 
@@ -61,11 +61,11 @@ public class BusinessPlaceData extends NPSData {
                 .append("\t").append(NPSProperty.Item.Normal.CREATED_YM).append(" : [").append(this.createdDatedYM).append("]\n")
                 .append("\t").append(NPSProperty.Item.Normal.BUSINESSPLACE_NAME).append(" : [").append(this.name).append("]\n")
                 .append("\t").append(NPSProperty.Item.Normal.REGISTRATION_NUMBER).append(" : [").append(this.registrationNumber).append("]\n")
-                .append("\t").append(NPSProperty.Item.Normal.ADDRESS_STREET).append(" : [").append(this.addrStreet).append("]\n")
+                .append("\t").append(NPSProperty.Item.Normal.ADDRESS_ROAD).append(" : [").append(this.addrRoad).append("]\n")
                 .append("\t").append(NPSProperty.Item.Normal.STATUS_CODE).append(" : [").append(this.statusCode).append("]\n")
                 .append("\t").append(NPSProperty.Item.Normal.DIVISION_CODE).append(" : [").append(this.divisionCode).append("]\n")
                 .append("\t").append(NPSProperty.Item.Normal.ADDRESS_DG).append(" : [").append(this.addrCodeDG).append("]\n")
-                .append("\t").append(NPSProperty.Item.Normal.ADDRESS_SGG).append(" : [").append(this.addrCodeSGG).append("]\n")
+                .append("\t").append(NPSProperty.Item.Normal.ADDRESS_SGGU).append(" : [").append(this.addrCodeSGGU).append("]\n")
                 .append("\t").append(NPSProperty.Item.Normal.ADDRESS_EMD).append(" : [").append(this.addrCodeEMD).append("]");
 
         consumer.accept(sb.toString());

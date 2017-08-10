@@ -10,6 +10,9 @@ import com.github.seijuro.publicdata.result.PublicDataAPIResult;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Properties;
 
 public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implements PublicDataAPIPageableKeySupplier {
     @ToString
@@ -91,6 +94,18 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
         do {
             requestState.reset();
             do {
+                if (didAlreadyVisit(api, config)) {
+                    String ret = config.getProperty(pageNumberKey, String.class);
+                    int pageNumber = Integer.parseInt(ret);
+
+                    pageState.setCurrentPage(pageNumber);
+                    pageState.setTotalCount(Integer.MAX_VALUE);
+
+                    break;
+                }
+
+                Thread.sleep(500);
+
                 request(api, serviceKey, config);
             } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
 
@@ -99,18 +114,18 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
     }
 
     @Override
-    public void handleHTTPResponse(String url, int code, String response) {
-        super.handleHTTPResponse(url, code, response);
+    public void handleHTTPResponse(String url, Properties props, int code, String response) {
+        super.handleHTTPResponse(url, props, code, response);
     }
 
     @Override
-    public void handleHTTPErrorResponse(String url, int code, String response, String errmsg) {
-        super.handleHTTPErrorResponse(url, code, response, errmsg);
+    public void handleHTTPErrorResponse(String url, Properties props, int code, String response, String errmsg) {
+        super.handleHTTPErrorResponse(url, props, code, response, errmsg);
     }
 
     @Override
-    public void handleResult(String url, PublicDataAPIResult result) {
-        super.handleResult(url, result);
+    public void handleResult(String url, Properties props, String response, PublicDataAPIResult result) {
+        super.handleResult(url, props, response, result);
 
         pageState.setCurrentPage(result.getPageNo());
         pageState.setCurrentResult(result.getNumberOfRows());
@@ -118,7 +133,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
     }
 
     @Override
-    public void handleErrorResult(String url, PublicDataAPIErrorResult result) {
-        super.handleErrorResult(url, result);
+    public void handleErrorResult(String url, Properties props, String response, PublicDataAPIErrorResult result) {
+        super.handleErrorResult(url, props, response, result);
     }
 }

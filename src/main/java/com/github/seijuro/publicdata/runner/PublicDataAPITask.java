@@ -11,12 +11,26 @@ import com.github.seijuro.publicdata.result.PublicDataAPIErrorResult;
 import com.github.seijuro.publicdata.result.PublicDataAPIResult;
 import com.github.seijuro.publicdata.api.PublicDataAPI;
 import com.github.seijuro.publicdata.parser.PublicDataAPIResponseParser;
+import com.github.seijuro.publicdata.PublicDataAPIResultHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-public abstract class PublicDataAPITask implements PublicDataAPIRunnable, PublicDataAPIServiceKeySupplier, IPublicDataAPIConfigSupplier {
+import java.util.Properties;
+
+/**
+ * For scapping data using PublicDataAPIs, send requests and handle response repeatedly.
+ * To implements sending repeated requests & handling response, the class which extends <code>Thread</code> or implements <code>Runnable</code> interface is suitable.
+ * For this purpose, <code>PublicDataAPITask</code> class is impplemnting <code>PublicDataAPIRunnable</code>.
+ * <code>PublicDataAPITask</code> is implementing two more interfaces, <code>PublicDataAPIServiceKeySupplier</code> & <code>IPublicDataAPIConfigSupplier</code>.
+ * <code>PublicDataAPITask</code> have no idea about serviceKey and configuration for API(these kinda information are decided later).
+ *
+ * {@link PublicDataAPIRunnable}
+ * {@link PublicDataAPIServiceKeySupplier}
+ * {@link IPublicDataAPIConfigSupplier}
+ */
+public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitCheckable, PublicDataAPIServiceKeySupplier, IPublicDataAPIConfigSupplier {
     /**
      * enum RunningState
      */
@@ -67,7 +81,12 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
     private PublicDataAPIResultDelegater delegater;
 
     /**
-     * C'tor
+     * Constructs an <code>PublicDataAPITask</code> and takes <code>PublicDataAPIServices</code> as an parameter.
+     * The parameter, <code>PublicDataAPIServices</code>, will be used to make api using <code>PublicDataAPIFactory</code>,
+     * retrieve serviceKey using <code>PublicDataAPIServiceKeySupplier</code>, etc ...
+     *
+     * @param apiService
+     * @throws PublicDataAPIException
      */
     public PublicDataAPITask(PublicDataAPIServices apiService) throws PublicDataAPIException {
         this.apiService = apiService;
@@ -103,10 +122,17 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
             String serviceKey = getServiceKey(apiService);
             PublicDataAPIConfig config = getNextConfig();
 
+            if (didAlreadyVisit(api, config)) {
+                break;
+            }
+
             request(api, serviceKey, config);
         } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
     }
 
+    /**
+     * {@link Runnable#run()}
+     */
     @Override
     public void run() {
         try {
@@ -118,7 +144,19 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
     }
 
     /**
-     * sending request using api
+     * Sending request message using <code>PublicDataAPI</code> and handle https response.
+     * 1. Check a http response. If the response contained the http status code within the range, 200 ~ 299,
+     * call <code>handleHTTPResponse</code> and go to next step. Otherwise, call <code>handleHTTPErrorResponse</code> and finish.
+     * 2. Parse the http response message. If the result of parsing HTTP response message was ok, it would call <code>handleResult</code>.
+     * Otherwise, call <code>handleErrorResult</code>.
+     * Additionally, If you register the delegator, this will delegate all event.
+     *
+     * {@link PublicDataAPIResultDelegater}
+     * {@link PublicDataAPIResultHandler}
+     *
+     * @param api
+     * @param serviceKey
+     * @param config
      */
     public void request(PublicDataAPI api, String serviceKey, PublicDataAPIConfig config) {
         try {
@@ -127,7 +165,8 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
 
             if (config != null) {
                 RestfulAPIResponse response = api.request();
-                String url = api.getURL();
+                String url = api.getRequestURL();
+                Properties props = config.getProperties();
 
                 if (response instanceof RestfulAPIErrorResponse) {
                     RestfulAPIErrorResponse errorResponse = (RestfulAPIErrorResponse) response;
@@ -135,29 +174,29 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
                     String res = errorResponse.getResponse();
                     String msg = errorResponse.getMessage();
 
-                    handleHTTPErrorResponse(url, status, res, msg);
+                    handleHTTPErrorResponse(url, props, status, res, msg);
 
-                    if (this.delegater != null) { this.delegater.handleHTTPErrorResponse(url, status, res, msg); }
+                    if (this.delegater != null) { this.delegater.handleHTTPErrorResponse(url, props, status, res, msg); }
                 }
                 else {
                     int status = response.getHttpResponseCode();
                     String res = response.getResponse();
 
-                    handleHTTPResponse(url, status, res);
-                    if (this.delegater != null) { this.delegater.handleHTTPResponse(url, status, res); }
+                    handleHTTPResponse(url, config.getProperties(), status, res);
+                    if (this.delegater != null) { this.delegater.handleHTTPResponse(url, props, status, res); }
 
-                    this.parser.parse(InputType.TEXT, response.getResponse());
+                    this.parser.parse(InputType.TEXT, res);
                     PublicDataAPIResult result = this.parser.getResult();
 
                     if (result instanceof PublicDataAPIErrorResult) {
                         PublicDataAPIErrorResult errRet = (PublicDataAPIErrorResult) result;
 
-                        handleErrorResult(url, errRet);
-                        if (this.delegater != null) { this.delegater.handleErrorResult(url,errRet); }
+                        handleErrorResult(url, props, res, errRet);
+                        if (this.delegater != null) { this.delegater.handleErrorResult(url, props, res, errRet); }
                     }
                     else {
-                        handleResult(url, result);
-                        if (this.delegater != null) { this.delegater.handleResult(url, result); }
+                        handleResult(url, config.getProperties(), res, result);
+                        if (this.delegater != null) { this.delegater.handleResult(url, props, res, result); }
                     }
                 }
             }
@@ -167,23 +206,62 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, Public
         }
     }
 
+    /**
+     * Implements <code>PublicDataAPIHandler#handleHTTPResponse</code>
+     *
+     * {@link PublicDataAPIResultHandler}
+     *
+     * @param url
+     * @param code
+     * @param response
+     */
     @Override
-    public void handleHTTPResponse(String url, int code, String response) {
+    public void handleHTTPResponse(String url, Properties params, int code, String response) {
     }
 
+    /**
+     * Implements <code>PublicDataAPIHandler#handleHTTPResponse</code>.
+     *
+     * {@link PublicDataAPIResultHandler}
+     *
+     * @param url
+     * @param code
+     * @param response
+     * @param errmsg
+     */
     @Override
-    public void handleHTTPErrorResponse(String url, int code, String response, String errmsg) {
+    public void handleHTTPErrorResponse(String url, Properties params, int code, String response, String errmsg) {
         requestState.setSuccess(false);
         requestState.incrementTry();
     }
 
+    /**
+     * Implements <code>PublicDataAPIHandler#handleResult</code>
+     *
+     * {@link PublicDataAPIResultHandler#handleResult}
+     *
+     * @param url
+     * @param params
+     * @param response
+     * @param result
+     */
     @Override
-    public void handleResult(String url, PublicDataAPIResult result) {
+    public void handleResult(String url, Properties params, String response, PublicDataAPIResult result) {
         requestState.setSuccess(true);
     }
 
+    /**
+     * Implements <code>PublicDataAPIHandler#handleErrorResult</code>
+     *
+     * {@link PublicDataAPIResultHandler#handleErrorResult}
+     *
+     * @param url
+     * @param params
+     * @param response
+     * @param result
+     */
     @Override
-    public void handleErrorResult(String url, PublicDataAPIErrorResult result) {
+    public void handleErrorResult(String url, Properties params, String response, PublicDataAPIErrorResult result) {
         requestState.setSuccess(false);
         requestState.incrementTry();
     }

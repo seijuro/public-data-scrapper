@@ -15,11 +15,11 @@ public class NPSProperty {
             public static final String ID = "seq";
             public static final String BUSINESSPLACE_NAME = "wkplNm";
             public static final String REGISTRATION_NUMBER = "bzowrRgstNo";
-            public static final String ADDRESS_STREET = "wkplRoadNmDtlAddr";
+            public static final String ADDRESS_ROAD = "wkplRoadNmDtlAddr";
             public static final String STATUS_CODE = "wkplJnngStcd";
             public static final String DIVISION_CODE = "wkplStylDvcd";
             public static final String ADDRESS_DG = "ldongAddrMgplDgCd";
-            public static final String ADDRESS_SGG = "ldongAddrMgplSgguCd";
+            public static final String ADDRESS_SGGU = "ldongAddrMgplSgguCd";
             public static final String ADDRESS_EMD = "ldongAddrMgplSgguEmdCd";
         }
 
@@ -44,11 +44,11 @@ public class NPSProperty {
             public static final int IC_ID = CodePrefix.IC_PREFIX | 0x02;
             public static final int IC_BUSINESSPLACE_NAME = CodePrefix.IC_PREFIX | 0x03;
             public static final int IC_REGISTRATION_NUMBER = CodePrefix.IC_PREFIX | 0x04;
-            public static final int IC_ADDRESS_STREET = CodePrefix.IC_PREFIX | 0x05;
+            public static final int IC_ADDRESS_ROAD = CodePrefix.IC_PREFIX | 0x05;
             public static final int IC_STATUS_CODE = CodePrefix.IC_PREFIX | 0x06;
             public static final int IC_DIVISION_CODE = CodePrefix.IC_PREFIX | 0x07;
             public static final int IC_ADDRESS_DG = CodePrefix.IC_PREFIX | 0x08;
-            public static final int IC_ADDRESS_SGG = CodePrefix.IC_PREFIX | 0x09;
+            public static final int IC_ADDRESS_SGGU = CodePrefix.IC_PREFIX | 0x09;
             public static final int IC_ADDRESS_EMD = CodePrefix.IC_PREFIX | 0x0A;
         }
 

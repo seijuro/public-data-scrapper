@@ -14,11 +14,11 @@ public class NPSPropertyUtils {
             itemMap.put(NPSProperty.Item.Normal.ID , NPSProperty.ItemCode.Normal.IC_ID);
             itemMap.put(NPSProperty.Item.Normal.BUSINESSPLACE_NAME, NPSProperty.ItemCode.Normal.IC_BUSINESSPLACE_NAME);
             itemMap.put(NPSProperty.Item.Normal.REGISTRATION_NUMBER , NPSProperty.ItemCode.Normal.IC_REGISTRATION_NUMBER);
-            itemMap.put(NPSProperty.Item.Normal.ADDRESS_STREET, NPSProperty.ItemCode.Normal.IC_ADDRESS_STREET);
+            itemMap.put(NPSProperty.Item.Normal.ADDRESS_ROAD, NPSProperty.ItemCode.Normal.IC_ADDRESS_ROAD);
             itemMap.put(NPSProperty.Item.Normal.STATUS_CODE, NPSProperty.ItemCode.Normal.IC_STATUS_CODE);
             itemMap.put(NPSProperty.Item.Normal.DIVISION_CODE, NPSProperty.ItemCode.Normal.IC_DIVISION_CODE);
             itemMap.put(NPSProperty.Item.Normal.ADDRESS_DG, NPSProperty.ItemCode.Normal.IC_ADDRESS_DG);
-            itemMap.put(NPSProperty.Item.Normal.ADDRESS_SGG, NPSProperty.ItemCode.Normal.IC_ADDRESS_SGG);
+            itemMap.put(NPSProperty.Item.Normal.ADDRESS_SGGU, NPSProperty.ItemCode.Normal.IC_ADDRESS_SGGU);
             itemMap.put(NPSProperty.Item.Normal.ADDRESS_EMD, NPSProperty.ItemCode.Normal.IC_ADDRESS_EMD);
 
             itemMap.put(NPSProperty.Item.Detail.BUSINESSTYPE_NAME, NPSProperty.ItemCode.Detail.IC_BUSINESSTYPE_NAME);

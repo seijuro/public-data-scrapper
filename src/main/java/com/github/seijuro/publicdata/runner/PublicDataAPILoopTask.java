@@ -25,6 +25,7 @@ public abstract class PublicDataAPILoopTask extends PublicDataAPITask {
         try {
             do {
                 handleLoop();
+                Thread.sleep(200);
             } while (runningState == RunningState.RUNNING);
         }
         catch (InterruptedException excp) {

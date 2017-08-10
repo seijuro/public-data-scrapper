@@ -86,7 +86,7 @@ public class BusinessPlaceInfoAPIResponseParser extends PublicDataAPIResponseXML
                     case NPSProperty.ItemCode.Normal.IC_REGISTRATION_NUMBER:
                         this.dataBuilder.setRegistrationNumber(value);
                         return true;
-                    case NPSProperty.ItemCode.Normal.IC_ADDRESS_STREET:
+                    case NPSProperty.ItemCode.Normal.IC_ADDRESS_ROAD:
                         this.dataBuilder.setAddrStreet(value);
                         return true;
                     case NPSProperty.ItemCode.Normal.IC_STATUS_CODE:
@@ -98,7 +98,7 @@ public class BusinessPlaceInfoAPIResponseParser extends PublicDataAPIResponseXML
                     case NPSProperty.ItemCode.Normal.IC_ADDRESS_DG:
                         this.dataBuilder.setAddrCodeDG(value);
                         return true;
-                    case NPSProperty.ItemCode.Normal.IC_ADDRESS_SGG:
+                    case NPSProperty.ItemCode.Normal.IC_ADDRESS_SGGU:
                         this.dataBuilder.setAddrCodeSGG(value);
                         return true;
                     case NPSProperty.ItemCode.Normal.IC_ADDRESS_EMD:

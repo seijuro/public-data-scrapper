@@ -11,7 +11,7 @@ public class PublicDataAPIConfig {
     private Properties properties = new Properties();
 
     public <T extends ConfigProperty, V extends Number>
-    Object setProperty(T property, V value) { return getProperties().put(property.getProperty(), value); }
+    Object setProperty(T property, V value) { return getProperties().put(property.getProperty(), value.toString()); }
 
     public <T extends ConfigProperty, V extends ConfigPropertyValue>
     Object setProperty(T property, V value) {
