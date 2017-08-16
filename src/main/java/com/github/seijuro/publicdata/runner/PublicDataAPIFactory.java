@@ -31,6 +31,9 @@ public class PublicDataAPIFactory {
                 || type == PublicDataAPIServices.RECALL_PAGEABLE) {
             return new RecallAPI();
         }
+        else if (type == PublicDataAPIServices.INSURANCE) {
+            return new InsuranceAPI();
+        }
 
         throw new PublicDataAPIException("Unknown type or Not implemented yet.");
     }

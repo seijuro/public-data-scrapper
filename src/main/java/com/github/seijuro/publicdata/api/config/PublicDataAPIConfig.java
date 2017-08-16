@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.json.simple.JSONObject;
 
 import java.util.Properties;
+import java.util.function.Predicate;
 
 public class PublicDataAPIConfig {
     @Getter(AccessLevel.PUBLIC)

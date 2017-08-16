@@ -3,18 +3,17 @@ package com.github.seijuro.publicdata.runner;
 import com.github.seijuro.publicdata.PublicDataAPIException;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
 import com.github.seijuro.publicdata.api.PublicDataAPI;
-import com.github.seijuro.publicdata.api.config.ConfigProperty;
 import com.github.seijuro.publicdata.api.config.PublicDataAPIConfig;
 import com.github.seijuro.publicdata.result.PublicDataAPIErrorResult;
 import com.github.seijuro.publicdata.result.PublicDataAPIResult;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Properties;
 
-public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implements PublicDataAPIPageableKeySupplier {
+public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
     @ToString
     protected class PagingState {
         PagingState(int initPage, int size) {
@@ -26,10 +25,10 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
         /**
          * Instance Properties
          */
-        private final int initPageIndex;
-
         @Getter @Setter
-        int currentPage = 0;
+        private int initPageIndex = 1;
+        @Getter @Setter
+        int currentPage = 1;
         @Getter @Setter
         int pageSize = 0;
         @Getter @Setter
@@ -44,7 +43,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
         }
 
         public boolean hasMorePage() {
-            return currentPage * pageSize < totalCount;
+            return (currentPage + (initPageIndex == 0 ? 1 : 0)) * pageSize < totalCount;
         }
     }
 
@@ -52,6 +51,26 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
      * Instance Properties
      */
     protected PagingState pageState;
+    @Setter
+    protected PagePropertyExtractor pageNoExtractor;
+    @Setter
+    protected PagePropertySupplier pageNoSupplier;
+    @Setter
+    protected PagePropertyExtractor pageSizeExtractor;
+    @Getter
+    protected int defaultPageSize = 1000;
+    @Getter
+    protected int defaultPageNo = 1;
+
+    public void setDefaultPageNo(int pageNo) {
+        this.defaultPageNo = pageNo;
+        pageState.setInitPageIndex(pageNo);
+    }
+
+    public void setDefaultPageSize(int pageSize) {
+        defaultPageSize = pageSize;
+        pageState.setPageSize(pageSize);
+    }
 
     /**
      * C'tor
@@ -62,7 +81,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
     public PublicDataAPIPageableTask(PublicDataAPIServices apiService) throws PublicDataAPIException {
         super(apiService);
 
-        pageState = new PagingState(1, getDefaultPageSize());
+        pageState = new PagingState(1, getDefaultPageNo());
     }
 
     @Override
@@ -82,35 +101,49 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask implem
         PublicDataAPI api = getApi();
         String serviceKey = getServiceKey(getApiService());
         PublicDataAPIConfig config = getNextConfig();
-        ConfigProperty pageSizeKey = getPageSizeKey();
-        ConfigProperty pageNumberKey = getPageNumberKey();
-
-        String prop = config.getProperty(pageSizeKey, String.class);
-        int pageSize = prop != null ? Integer.parseInt(prop) : getDefaultPageSize();
+        int pageSize = pageSizeExtractor.or((config1 -> getDefaultPageSize())).apply(config);
 
         pageState.reset();
         pageState.setPageSize(pageSize);
 
-        do {
-            requestState.reset();
+        try {
             do {
-                if (didAlreadyVisit(api, config)) {
-                    String ret = config.getProperty(pageNumberKey, String.class);
-                    int pageNumber = Integer.parseInt(ret);
+                requestState.reset();
 
-                    pageState.setCurrentPage(pageNumber);
-                    pageState.setTotalCount(Integer.MAX_VALUE);
+                do {
+                    boolean didVisit = didAlreadyVisit(api, config);
 
-                    break;
-                }
+                    if (didVisit) {
+                        int pageNumber = pageNoExtractor.or((config1 -> getDefaultPageNo())).apply(config);
 
-                Thread.sleep(500);
+                        pageState.setCurrentPage(pageNumber);
+                        pageState.setTotalCount(Integer.MAX_VALUE);
 
-                request(api, serviceKey, config);
-            } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
+                        requestState.setSuccess(true);
 
-            config.setProperty(pageNumberKey, pageState.getCurrentPage() + 1);
-        } while (requestState.isSuccess() && pageState.hasMorePage()  && runningState == RunningState.RUNNING);
+                        break;
+                    }
+
+                    request(api, serviceKey, config);
+
+                    //  default
+                    long sleepMillis = getDefaultSleepSeconds() * DateUtils.MILLIS_PER_SECOND;
+
+                    if (!requestState.isSuccess()) {
+                        //  back-off
+                        sleepMillis = requestState.getRetryAfter();
+
+                        System.out.println(String.format("[SLEEP] %d ms (back off)", sleepMillis));
+                    }
+
+                    Thread.sleep(sleepMillis);
+                } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
+
+                pageNoSupplier.supply(config, pageState.getCurrentPage() + 1);
+            } while (pageState.hasMorePage() && runningState == RunningState.RUNNING);
+        }
+        catch (TaskExeption excp) {
+        }
     }
 
     @Override

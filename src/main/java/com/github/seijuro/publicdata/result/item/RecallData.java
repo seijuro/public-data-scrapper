@@ -3,6 +3,7 @@ package com.github.seijuro.publicdata.result.item;
 import com.google.gson.annotations.SerializedName;
 import com.github.seijuro.publicdata.property.RecallProperty;
 import lombok.*;
+import org.joda.time.DateTime;
 
 import java.util.function.Consumer;
 
@@ -14,7 +15,7 @@ public class RecallData extends PublicData {
      */
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.FieldName.IDX)
-    private final int idx;
+    private final Integer idx;
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.FieldName.COUNTRY_OF_MANUFACTURE)
     private final String countryOfManufacture;
@@ -41,7 +42,7 @@ public class RecallData extends PublicData {
     private final String dateOfIssue;
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.FieldName.DIMENSION_TYPE)
-    private final int dimensionType;
+    private final String dimensionType;
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.FieldName.Extra)
     private final RecallExtraData extra;
@@ -110,7 +111,7 @@ public class RecallData extends PublicData {
         @Setter(AccessLevel.PUBLIC)
         private String dateOfIssue = null;
         @Setter(AccessLevel.PUBLIC)
-        private int dimensionType = Integer.MIN_VALUE;
+        private String dimensionType = null;
         @Setter(AccessLevel.PUBLIC)
         private RecallExtraData extra = null;
 

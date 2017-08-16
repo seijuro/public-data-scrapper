@@ -283,7 +283,7 @@ public class RecallAPIConfig extends PublicDataAPIConfig {
     /**
      * enum SortOrder
      */
-    private enum SortOrder implements IField {
+    public enum SortOrder implements IField {
         PROPERTY("property"),
         DIRECTION("direction");
 
@@ -310,14 +310,14 @@ public class RecallAPIConfig extends PublicDataAPIConfig {
     /**
      * enum Pageable
      */
-    private enum Pageable implements IField {
+    public enum Pageable implements IField {
         ENABLE("enable"),
         PAGE_NUMBER("pageNumber"),
         PAGE_SIZE("pageSize"),
         SORT_ORDERS("sortOrders");
 
         public static Boolean DEFAULT_ENABLE = new Boolean(true);
-        public static Integer DEFAULT_PAGESIZE = new Integer(10);
+        public static Integer DEFAULT_PAGESIZE = new Integer(1000);
         public static Integer DEFAULT_PAGENUMBER = new Integer(0);
 
         /**
@@ -352,6 +352,12 @@ public class RecallAPIConfig extends PublicDataAPIConfig {
         if (builder.pageable instanceof JSONObject) { props.put(Property.PARAM_PAGEABLE.getProperty(), builder.pageable.toJSONString()); }
         if (builder.visibility instanceof JSONObject) { props.put(Property.PARAM_FIELD_VISIBILITY.getProperty(), builder.visibility.toJSONString()); }
         if (builder.distinct instanceof Field) { props.put(Property.PARAM_DISTINCT.getProperty(), builder.distinct.toString()); }
+    }
+
+    public String getPageable() {
+        Properties props = getProperties();
+
+        return (String)(props.get(Property.PARAM_PAGEABLE.getProperty()));
     }
 
     @Override
@@ -395,9 +401,9 @@ public class RecallAPIConfig extends PublicDataAPIConfig {
             // set default(s)
             this.pageable = new JSONObject();
 
-            this.pageable.put(Pageable.ENABLE, Pageable.DEFAULT_ENABLE);
-            this.pageable.put(Pageable.PAGE_SIZE, Pageable.DEFAULT_PAGESIZE);
-            this.pageable.put(Pageable.PAGE_NUMBER, Pageable.DEFAULT_PAGENUMBER);
+            this.pageable.put(Pageable.ENABLE.getFieldName(), Pageable.DEFAULT_ENABLE);
+            this.pageable.put(Pageable.PAGE_SIZE.getFieldName(), Pageable.DEFAULT_PAGESIZE);
+            this.pageable.put(Pageable.PAGE_NUMBER.getFieldName(), Pageable.DEFAULT_PAGENUMBER);
         }
 
         /**

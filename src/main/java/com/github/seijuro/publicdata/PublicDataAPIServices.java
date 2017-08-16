@@ -11,5 +11,7 @@ public enum PublicDataAPIServices {
     SPEC_SERVICE,
 
     RECALL,
-    RECALL_PAGEABLE;
+    RECALL_PAGEABLE,
+
+    INSURANCE;
 }

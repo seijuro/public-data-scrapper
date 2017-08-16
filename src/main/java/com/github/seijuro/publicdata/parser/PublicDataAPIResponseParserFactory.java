@@ -31,6 +31,9 @@ public class PublicDataAPIResponseParserFactory {
         else if (type == PublicDataAPIServices.RECALL_PAGEABLE) {
             return new RecallAPIPageableResponseParser();
         }
+        else if (type == PublicDataAPIServices.INSURANCE) {
+            return new InsuranceAPIResponseParser();
+        }
 
         assert (0 == 1);
 

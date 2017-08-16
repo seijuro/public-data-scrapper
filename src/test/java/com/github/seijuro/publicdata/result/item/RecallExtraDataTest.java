@@ -21,11 +21,11 @@ public class RecallExtraDataTest {
             assertNotNull(extra.getTimeSecond());
             assertNotNull(extra.getInc());
 
-            assertEquals(1417069728000L, Long.parseLong(extra.getTime()));
-            assertEquals(false, Boolean.parseBoolean(extra.get_new()));
-            assertEquals(-458209134, Integer.parseInt(extra.getMachine()));
-            assertEquals(1417069728L, Long.parseLong(extra.getTimeSecond()));
-            assertEquals(202048579L, Long.parseLong(extra.getInc()));
+            assertEquals(1417069728000L, extra.getTime().longValue());
+            assertEquals(false, extra.get_new());
+            assertEquals(-458209134L, extra.getMachine().longValue());
+            assertEquals(1417069728L, extra.getTimeSecond().longValue());
+            assertEquals(202048579L, extra.getInc().longValue());
 
             return;
         }

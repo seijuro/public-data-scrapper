@@ -12,19 +12,19 @@ import lombok.ToString;
 public class RecallExtraData extends Object {
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.Extra.TIME)
-    private final String time;
+    private final Long time;
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.Extra.NEW)
-    private final String _new;
+    private final Boolean _new;
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.Extra.MACHINE)
-    private final String machine;
+    private final Long machine;
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.Extra.TIMESECOND)
-    private final String timeSecond;
+    private final Long timeSecond;
     @Getter(AccessLevel.PUBLIC)
     @SerializedName(RecallProperty.Content.Extra.INC)
-    private final String inc;
+    private final Long inc;
 
     /**
      * C'tor
@@ -34,7 +34,7 @@ public class RecallExtraData extends Object {
      * @param $timeSecond
      * @param $inc
      */
-    public RecallExtraData(String $time, String $new, String $machine, String $timeSecond, String $inc) {
+    public RecallExtraData(Long $time, Boolean $new, Long $machine, Long $timeSecond, Long $inc) {
         this.time = $time;
         this._new = $new;
         this.machine = $machine;

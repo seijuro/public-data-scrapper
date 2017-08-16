@@ -1,5 +1,6 @@
 package com.github.seijuro.publicdata.result;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.github.seijuro.publicdata.property.RecallProperty;
 import com.github.seijuro.publicdata.result.item.RecallData;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -127,73 +129,55 @@ public class RecallAPIPageableResult extends RecallAPIResult {
         /**
          * Instance Properties
          */
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.ENABLE)
         private Boolean enabled;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.NUMBER)
         private Integer number;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.SIZE)
         private Integer size;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.TOTAL_PAGES)
         private Integer totalPages;
-        @Setter(AccessLevel.PUBLIC)
+
         @SerializedName(RecallProperty.NUMBER_OF_ELEMENTS)
         private Integer numOfElements;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.TOTAL_ELEMENTS)
         private Integer totalElements;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.HAS_PREVIOUS_PAGE)
         private Boolean hasPreviousPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.HAS_NEXT_PAGE)
         private Boolean hasNextPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.IS_FIRST_PAGE)
         private Boolean isFirstPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.IS_LAST_PAGE)
         private Boolean isLastPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.HAS_CONTENTS)
         private Boolean hasContent;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.BEGIN_PAGE)
         private Integer beginPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.END_PAGE)
         private Integer endPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.PREVIOUS_PAGE)
         private Integer previousPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.NEXT_PAGE)
         private Integer nextPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.SORT)
         private String sort;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.STATUS)
         private String status;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.PAGE_NUMBER)
         private Integer pageNumber;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.PAGE_SIZE)
         private Integer pageSize;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.FIRST_PAGE)
         private Boolean firstPage;
-        @Setter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.LAST_PAGE)
         private Boolean lastPage;
-        @Setter(AccessLevel.PUBLIC)
-        @Getter(AccessLevel.PUBLIC)
         @SerializedName(RecallProperty.CONTENT)
         private ArrayList<RecallData> contents;
+
+        public List<RecallData> getContents() {
+            return contents;
+        }
 
         /**
          * Builder pattern method

@@ -6,7 +6,7 @@ import lombok.Getter;
 class PublicDataAPIConfigHelper {
     static class DataGoKr {
         @Getter(AccessLevel.PACKAGE)
-        static final int defaultNumberOfROws = 100;
+        static final int defaultNumberOfROws = 10;
         @Getter(AccessLevel.PACKAGE)
         static final int upperBoundNumberOfRows = 9999;
         @Getter(AccessLevel.PACKAGE)

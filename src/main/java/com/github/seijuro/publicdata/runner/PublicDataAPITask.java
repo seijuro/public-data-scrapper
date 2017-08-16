@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Properties;
 
@@ -31,6 +32,9 @@ import java.util.Properties;
  * {@link IPublicDataAPIConfigSupplier}
  */
 public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitCheckable, PublicDataAPIServiceKeySupplier, IPublicDataAPIConfigSupplier {
+    @Getter
+    private static final long DefaultSleepSeconds = 3L;
+
     /**
      * enum RunningState
      */
@@ -50,14 +54,21 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
         private int currentTry = 0;
         @Getter @Setter
         private boolean success = false;
+        private long retryAfter = 3;
 
         public void incrementTry() {
             ++this.currentTry;
         }
 
         public void reset() {
-            this.currentTry = 0;
-            this.success = false;
+            currentTry = 0;
+            success = false;
+            retryAfter = getDefaultSleepSeconds();
+        }
+
+        public long getRetryAfter() {
+            retryAfter *= 5L;
+            return retryAfter * DateUtils.MILLIS_PER_SECOND;
         }
 
         public boolean shouldRetry() {
@@ -79,6 +90,12 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
     private final PublicDataAPI api;
     @Setter(AccessLevel.PUBLIC)
     private PublicDataAPIResultDelegater delegater;
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
+    private int revision = 0;
+
+    public void setMaxTry(int max) {
+        this.requestState.setMaxTry(max);
+    }
 
     /**
      * Constructs an <code>PublicDataAPITask</code> and takes <code>PublicDataAPIServices</code> as an parameter.
@@ -117,17 +134,33 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
     public void handleLoop() throws InterruptedException {
         requestState.reset();
 
-        do {
-            PublicDataAPI api = getApi();
-            String serviceKey = getServiceKey(apiService);
-            PublicDataAPIConfig config = getNextConfig();
+        try {
+            do {
+                PublicDataAPI api = getApi();
+                String serviceKey = getServiceKey(apiService);
+                PublicDataAPIConfig config = getNextConfig();
 
-            if (didAlreadyVisit(api, config)) {
-                break;
-            }
+                if (didAlreadyVisit(api, config)) {
+                    break;
+                }
 
-            request(api, serviceKey, config);
-        } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
+                request(api, serviceKey, config);
+
+                long sleepMillis = getDefaultSleepSeconds() * DateUtils.MILLIS_PER_SECOND;
+
+                if (!requestState.isSuccess()) {
+                    sleepMillis = requestState.getRetryAfter();
+
+                    System.out.println(String.format("[SLEEP] %d ms (back off)", sleepMillis));
+                }
+
+                Thread.sleep(sleepMillis);
+
+            } while (requestState.shouldRetry() && runningState == RunningState.RUNNING);
+        }
+        catch (TaskExeption excp) {
+            excp.printStackTrace();
+        }
     }
 
     /**
@@ -164,6 +197,8 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
             api.setConfig(config);
 
             if (config != null) {
+                System.out.println(String.format("[HTTP] request ... (timeout : %d)", api.getReadTimeout()));
+
                 RestfulAPIResponse response = api.request();
                 String url = api.getRequestURL();
                 Properties props = config.getProperties();

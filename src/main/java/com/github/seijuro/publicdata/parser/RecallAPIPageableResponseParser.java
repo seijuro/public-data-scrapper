@@ -17,6 +17,7 @@ public class RecallAPIPageableResponseParser extends RecallAPIResponseParser {
     public void parse(InputType type, String input) {
         try {
             Gson gson = new Gson();
+            System.out.println("parser input : " + input);
             RecallAPIPageableResult.Builder builder = gson.fromJson(input, RecallAPIPageableResult.Builder.class);
 
             assert (builder != null);

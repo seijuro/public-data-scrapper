@@ -60,6 +60,10 @@ public class LegalDongAddressReader implements Closeable, AutoCloseable {
                 LegalDongAddressCode code = LegalDongAddressCode.parse(_code);
                 LegalDongAddressStatus status = LegalDongAddressStatus.parse(_status);
 
+                if (status == LegalDongAddressStatus.NOT_AVAILABLE) {
+                    continue;
+                }
+
                 return new LegalDongAddress(code, sb.toString(), status);
             }
         }
