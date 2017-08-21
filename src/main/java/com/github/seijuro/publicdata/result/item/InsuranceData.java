@@ -52,7 +52,7 @@ public class InsuranceData extends PublicData {
      * Builder Pattern class
      */
     public static class Builder extends PublicData.Builder {
-        static final DateTimeFormatter dt = DateTimeFormat.forPattern("yy/MM/dd");
+        static final DateTimeFormatter dt = DateTimeFormat.forPattern("yyyyMMdd");
         /**
          * Instance Properties
          */
@@ -106,7 +106,7 @@ public class InsuranceData extends PublicData {
          */
         @Override
         public InsuranceData build() {
-            return null;
+            return new InsuranceData(this);
         }
     }
 }

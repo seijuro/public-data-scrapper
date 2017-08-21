@@ -99,8 +99,9 @@ public class InsuranceAPIResponseParser extends PublicDataAPIResponseXMLParser {
                 assert (this.dataList != null);
                 assert (this.dataBuilder != null);
 
-                this.dataList.add(this.dataBuilder.build());
+//                InsuranceData item = this.dataBuilder.build();
 
+                this.dataList.add(this.dataBuilder.build());
                 this.dataBuilder = null;
 
                 return true;

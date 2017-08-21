@@ -13,5 +13,8 @@ public enum PublicDataAPIServices {
     RECALL,
     RECALL_PAGEABLE,
 
-    INSURANCE;
+    INSURANCE,
+
+    THE_USE_OF_ELECTROCITY,
+    THE_USE_OF_GAS;
 }

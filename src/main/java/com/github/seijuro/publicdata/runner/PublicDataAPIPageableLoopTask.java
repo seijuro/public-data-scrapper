@@ -24,5 +24,7 @@ public abstract class PublicDataAPIPageableLoopTask extends PublicDataAPIPageabl
         catch (InterruptedException excp) {
             excp.printStackTrace();
         }
+
+        System.out.println("[INFO] stop thread ...");
     }
 }

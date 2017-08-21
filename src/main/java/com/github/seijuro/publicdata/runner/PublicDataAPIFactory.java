@@ -34,6 +34,12 @@ public class PublicDataAPIFactory {
         else if (type == PublicDataAPIServices.INSURANCE) {
             return new InsuranceAPI();
         }
+        else if (type == PublicDataAPIServices.THE_USE_OF_ELECTROCITY) {
+            return new TheUseOfElectricityAPI();
+        }
+        else if (type == PublicDataAPIServices.THE_USE_OF_GAS) {
+            return new TheUseOfGasAPI();
+        }
 
         throw new PublicDataAPIException("Unknown type or Not implemented yet.");
     }

@@ -6,6 +6,7 @@ import com.github.seijuro.publicdata.api.PublicDataAPI;
 import com.github.seijuro.publicdata.api.config.PublicDataAPIConfig;
 import com.github.seijuro.publicdata.result.PublicDataAPIErrorResult;
 import com.github.seijuro.publicdata.result.PublicDataAPIResult;
+import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -58,17 +59,17 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
     @Setter
     protected PagePropertyExtractor pageSizeExtractor;
     @Getter
-    protected int defaultPageSize = 1000;
+    protected int pageSize = 1000;
     @Getter
-    protected int defaultPageNo = 1;
+    protected int pageNo = 1;
 
-    public void setDefaultPageNo(int pageNo) {
-        this.defaultPageNo = pageNo;
+    public void setPageNo(int $pageNo) {
+        pageNo = $pageNo;
         pageState.setInitPageIndex(pageNo);
     }
 
-    public void setDefaultPageSize(int pageSize) {
-        defaultPageSize = pageSize;
+    public void setPageSize(int $pageSize) {
+        pageSize = $pageSize;
         pageState.setPageSize(pageSize);
     }
 
@@ -81,7 +82,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
     public PublicDataAPIPageableTask(PublicDataAPIServices apiService) throws PublicDataAPIException {
         super(apiService);
 
-        pageState = new PagingState(1, getDefaultPageNo());
+        pageState = new PagingState(1, getPageNo());
     }
 
     @Override
@@ -92,6 +93,12 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
         catch (InterruptedException excp) {
             excp.printStackTrace();
         }
+
+        System.out.println("[INFO] stop thread ...");
+    }
+
+    public boolean goToNextPage(PublicDataAPI api, PublicDataAPIConfig config) {
+        return true;
     }
 
     @Override
@@ -101,7 +108,14 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
         PublicDataAPI api = getApi();
         String serviceKey = getServiceKey(getApiService());
         PublicDataAPIConfig config = getNextConfig();
-        int pageSize = pageSizeExtractor.or((config1 -> getDefaultPageSize())).apply(config);
+
+        if (config == null) {
+            stop();
+
+            return;
+        }
+
+        int pageSize = pageSizeExtractor.or((config1 -> getPageSize())).apply(config);
 
         pageState.reset();
         pageState.setPageSize(pageSize);
@@ -111,17 +125,20 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
                 requestState.reset();
 
                 do {
-                    boolean didVisit = didAlreadyVisit(api, config);
+                    if (didAlreadyVisit(api, config)) {
+                        if (goToNextPage(api, config)) {
+                            int pageNumber = pageNoExtractor.or((config1 -> getPageNo())).apply(config);
 
-                    if (didVisit) {
-                        int pageNumber = pageNoExtractor.or((config1 -> getDefaultPageNo())).apply(config);
+                            pageState.setCurrentPage(pageNumber);
+                            pageState.setTotalCount(Integer.MAX_VALUE);
 
-                        pageState.setCurrentPage(pageNumber);
-                        pageState.setTotalCount(Integer.MAX_VALUE);
+                            requestState.setSuccess(true);
 
-                        requestState.setSuccess(true);
-
-                        break;
+                            break;
+                        }
+                        else {
+                            return;
+                        }
                     }
 
                     request(api, serviceKey, config);
@@ -159,6 +176,8 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
     @Override
     public void handleResult(String url, Properties props, String response, PublicDataAPIResult result) {
         super.handleResult(url, props, response, result);
+
+        System.out.println(String.format("result := {no : %d, size : %d, total : %d}", result.getPageNo(), result.getNumberOfRows(), result.getTotalCount()));
 
         pageState.setCurrentPage(result.getPageNo());
         pageState.setCurrentResult(result.getNumberOfRows());

@@ -31,5 +31,7 @@ public abstract class PublicDataAPILoopTask extends PublicDataAPITask {
         catch (InterruptedException excp) {
             excp.printStackTrace();
         }
+
+        System.out.println("[INFO] stop thread ...");
     }
 }

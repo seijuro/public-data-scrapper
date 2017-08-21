@@ -140,6 +140,15 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
                 String serviceKey = getServiceKey(apiService);
                 PublicDataAPIConfig config = getNextConfig();
 
+                if (config == null) {
+                    System.out.println("[INFO] next config is 'NULL'.");
+                    System.out.println("[INFO] stop thread ...");
+
+                    stop();
+
+                    return;
+                }
+
                 if (didAlreadyVisit(api, config)) {
                     break;
                 }
@@ -174,6 +183,8 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
         catch (InterruptedException excp) {
             excp.printStackTrace();
         }
+
+        System.out.println("[INFO] stop thread ...");
     }
 
     /**
@@ -305,4 +316,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
     public void shutdown() {
         this.runningState = RunningState.SHUTDOWN;
     }
+
+    @Override
+    public void stop() { this.runningState = RunningState.STOP; }
 }

@@ -34,6 +34,12 @@ public class PublicDataAPIResponseParserFactory {
         else if (type == PublicDataAPIServices.INSURANCE) {
             return new InsuranceAPIResponseParser();
         }
+        else if (type == PublicDataAPIServices.THE_USE_OF_GAS) {
+            return new TheUseOfGasAPIResponseParser();
+        }
+        else if (type == PublicDataAPIServices.THE_USE_OF_ELECTROCITY) {
+            return new TheUseOfElectrocityAPIResponseParser();
+        }
 
         assert (0 == 1);
 

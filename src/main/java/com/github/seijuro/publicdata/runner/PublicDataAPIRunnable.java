@@ -13,4 +13,5 @@ public interface PublicDataAPIRunnable<T extends PublicDataAPIResult> extends Ru
 
     public abstract void handleLoop() throws InterruptedException;
     public abstract void shutdown();
+    public abstract void stop();
 }
