@@ -16,5 +16,8 @@ public enum PublicDataAPIServices {
     INSURANCE,
 
     THE_USE_OF_ELECTROCITY,
-    THE_USE_OF_GAS;
+    THE_USE_OF_GAS,
+
+    PYRAMID_SELLING,
+    PYRAMID_SELLING_DEATIL;
 }

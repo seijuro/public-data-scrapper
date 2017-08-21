@@ -6,7 +6,6 @@ import com.github.seijuro.publicdata.api.PublicDataAPI;
 import com.github.seijuro.publicdata.api.config.PublicDataAPIConfig;
 import com.github.seijuro.publicdata.result.PublicDataAPIErrorResult;
 import com.github.seijuro.publicdata.result.PublicDataAPIResult;
-import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -97,10 +96,6 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
         System.out.println("[INFO] stop thread ...");
     }
 
-    public boolean goToNextPage(PublicDataAPI api, PublicDataAPIConfig config) {
-        return true;
-    }
-
     @Override
     public void handleLoop() throws InterruptedException {
         requestState.reset();
@@ -125,20 +120,18 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
                 requestState.reset();
 
                 do {
-                    if (didAlreadyVisit(api, config)) {
-                        if (goToNextPage(api, config)) {
-                            int pageNumber = pageNoExtractor.or((config1 -> getPageNo())).apply(config);
+                    VisitCheckable.Result visitResult = didAlreadyVisit(api, config);
 
-                            pageState.setCurrentPage(pageNumber);
-                            pageState.setTotalCount(Integer.MAX_VALUE);
+                    if (visitResult == Result.VISITED) {
+                        pageState.setCurrentPage(pageNoExtractor.apply(config));
+                        pageState.setTotalCount(Integer.MAX_VALUE);
 
-                            requestState.setSuccess(true);
+                        requestState.setSuccess(true);
 
-                            break;
-                        }
-                        else {
-                            return;
-                        }
+                        break;
+                    }
+                    else if (visitResult == Result.VISITED_AND_LAST_PAGE) {
+                        return;
                     }
 
                     request(api, serviceKey, config);

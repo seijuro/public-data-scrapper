@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.util.List;
 

@@ -5,6 +5,7 @@ import com.github.seijuro.common.http.rest.RestfulAPIErrorResponse;
 import com.github.seijuro.common.http.rest.RestfulAPIResponse;
 import com.github.seijuro.publicdata.PublicDataAPIException;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
+import com.github.seijuro.publicdata.api.PublicDataAPIFactory;
 import com.github.seijuro.publicdata.api.config.PublicDataAPIConfig;
 import com.github.seijuro.publicdata.parser.PublicDataAPIResponseParserFactory;
 import com.github.seijuro.publicdata.result.PublicDataAPIErrorResult;
@@ -149,7 +150,10 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
                     return;
                 }
 
-                if (didAlreadyVisit(api, config)) {
+                VisitCheckable.Result visitResult = didAlreadyVisit(api, config);
+
+                if (visitResult == Result.VISITED ||
+                        visitResult == Result.VISITED_AND_LAST_PAGE) {
                     break;
                 }
 

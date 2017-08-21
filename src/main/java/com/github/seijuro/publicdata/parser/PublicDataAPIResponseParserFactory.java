@@ -40,6 +40,12 @@ public class PublicDataAPIResponseParserFactory {
         else if (type == PublicDataAPIServices.THE_USE_OF_ELECTROCITY) {
             return new TheUseOfElectrocityAPIResponseParser();
         }
+        else if (type == PublicDataAPIServices.PYRAMID_SELLING) {
+            return new PyramidSellingAPIResponseParser();
+        }
+        else if (type == PublicDataAPIServices.PYRAMID_SELLING_DEATIL) {
+            return new PyramidSellingDetailAPIResponseParser();
+        }
 
         assert (0 == 1);
 

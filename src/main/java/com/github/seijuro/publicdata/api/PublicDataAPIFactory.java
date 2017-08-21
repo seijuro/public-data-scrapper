@@ -1,4 +1,4 @@
-package com.github.seijuro.publicdata.runner;
+package com.github.seijuro.publicdata.api;
 
 import com.github.seijuro.publicdata.PublicDataAPIException;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
@@ -39,6 +39,12 @@ public class PublicDataAPIFactory {
         }
         else if (type == PublicDataAPIServices.THE_USE_OF_GAS) {
             return new TheUseOfGasAPI();
+        }
+        else if (type == PublicDataAPIServices.PYRAMID_SELLING) {
+            return new PyramidSellingAPI();
+        }
+        else if (type == PublicDataAPIServices.PYRAMID_SELLING_DEATIL) {
+            return new PyramidSellingDetailAPI();
         }
 
         throw new PublicDataAPIException("Unknown type or Not implemented yet.");
