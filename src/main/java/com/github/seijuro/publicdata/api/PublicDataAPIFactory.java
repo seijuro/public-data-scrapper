@@ -2,7 +2,6 @@ package com.github.seijuro.publicdata.api;
 
 import com.github.seijuro.publicdata.PublicDataAPIException;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
-import com.github.seijuro.publicdata.api.*;
 
 public class PublicDataAPIFactory {
     public static PublicDataAPI create(PublicDataAPIServices type) throws PublicDataAPIException {
@@ -45,6 +44,15 @@ public class PublicDataAPIFactory {
         }
         else if (type == PublicDataAPIServices.PYRAMID_SELLING_DEATIL) {
             return new PyramidSellingDetailAPI();
+        }
+        else if (type == PublicDataAPIServices.TELE_MARKETING_SELLER) {
+            return new TeleMarketingSellerAPI();
+        }
+        else if (type == PublicDataAPIServices.COLD_CALLING_SELLER) {
+            return new ColdCallingSellerAPI();
+        }
+        else if (type == PublicDataAPIServices.DOOR_TO_DOOR_SEELER) {
+            return new DoorToDoorSellerAPI();
         }
 
         throw new PublicDataAPIException("Unknown type or Not implemented yet.");

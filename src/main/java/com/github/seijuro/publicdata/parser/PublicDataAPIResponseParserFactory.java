@@ -46,6 +46,15 @@ public class PublicDataAPIResponseParserFactory {
         else if (type == PublicDataAPIServices.PYRAMID_SELLING_DEATIL) {
             return new PyramidSellingDetailAPIResponseParser();
         }
+        else if (type == PublicDataAPIServices.TELE_MARKETING_SELLER) {
+            return new TeleMarketingSellerAPIResponseParser();
+        }
+        else if (type == PublicDataAPIServices.COLD_CALLING_SELLER) {
+            return new ColdCallingSellerAPIResponseParser();
+        }
+        else if (type == PublicDataAPIServices.DOOR_TO_DOOR_SEELER) {
+            return new DoorToDoorSellerAPIResponseParser();
+        }
 
         assert (0 == 1);
 

@@ -4,7 +4,7 @@ import com.github.seijuro.publicdata.property.PublicDataProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-public class ColdCallingAPIConfig extends PublicDataAPIConfig {
+public class TeleMarketingSellerAPIConfig extends PublicDataAPIConfig {
     public enum Property implements ConfigProperty {
         NUM_OF_ROWS(PublicDataProperty.Request.NUM_OF_ROWS),
         PAGE_NO(PublicDataProperty.Request.PAGE_NO),
