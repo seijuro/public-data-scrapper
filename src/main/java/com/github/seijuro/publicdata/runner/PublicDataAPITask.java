@@ -93,6 +93,9 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
     private PublicDataAPIResultDelegater delegater;
     @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
     private int revision = 0;
+    @Setter(AccessLevel.PUBLIC)
+    @Getter
+    private long sleepMillisPerRequest = getDefaultSleepSeconds() * DateUtils.MILLIS_PER_SECOND;
 
     public void setMaxTry(int max) {
         this.requestState.setMaxTry(max);
@@ -159,7 +162,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
 
                 request(api, serviceKey, config);
 
-                long sleepMillis = getDefaultSleepSeconds() * DateUtils.MILLIS_PER_SECOND;
+                long sleepMillis = getSleepMillisPerRequest();
 
                 if (!requestState.isSuccess()) {
                     sleepMillis = requestState.getRetryAfter();
@@ -241,8 +244,8 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
                     if (result instanceof PublicDataAPIErrorResult) {
                         PublicDataAPIErrorResult errRet = (PublicDataAPIErrorResult) result;
 
-                        handleErrorResult(url, props, res, errRet);
-                        if (this.delegater != null) { this.delegater.handleErrorResult(url, props, res, errRet); }
+                        handleErrorResult(url, serviceKey, props, res, errRet);
+                        if (this.delegater != null) { this.delegater.handleErrorResult(url, serviceKey, props, res, errRet); }
                     }
                     else {
                         handleResult(url, config.getProperties(), res, result);
@@ -311,7 +314,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
      * @param result
      */
     @Override
-    public void handleErrorResult(String url, Properties params, String response, PublicDataAPIErrorResult result) {
+    public void handleErrorResult(String url, String serviceKey, Properties params, String response, PublicDataAPIErrorResult result) {
         requestState.setSuccess(false);
         requestState.incrementTry();
     }

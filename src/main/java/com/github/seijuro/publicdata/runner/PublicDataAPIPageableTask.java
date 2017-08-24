@@ -178,7 +178,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
     }
 
     @Override
-    public void handleErrorResult(String url, Properties props, String response, PublicDataAPIErrorResult result) {
-        super.handleErrorResult(url, props, response, result);
+    public void handleErrorResult(String url, String serviceKey, Properties props, String response, PublicDataAPIErrorResult result) {
+        super.handleErrorResult(url, serviceKey, props, response, result);
     }
 }

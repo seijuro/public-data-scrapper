@@ -39,11 +39,11 @@ public class PublicDataAPIFactory {
         else if (type == PublicDataAPIServices.THE_USE_OF_GAS) {
             return new TheUseOfGasAPI();
         }
-        else if (type == PublicDataAPIServices.PYRAMID_SELLING) {
-            return new PyramidSellingAPI();
+        else if (type == PublicDataAPIServices.PYRAMID_SELLER) {
+            return new PyramidSellerAPI();
         }
-        else if (type == PublicDataAPIServices.PYRAMID_SELLING_DEATIL) {
-            return new PyramidSellingDetailAPI();
+        else if (type == PublicDataAPIServices.PYRAMID_SELLER_DEATIL) {
+            return new PyramidSellerDetailAPI();
         }
         else if (type == PublicDataAPIServices.TELE_MARKETING_SELLER) {
             return new TeleMarketingSellerAPI();

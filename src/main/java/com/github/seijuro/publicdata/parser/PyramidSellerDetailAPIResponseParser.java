@@ -1,25 +1,25 @@
 package com.github.seijuro.publicdata.parser;
 
-import com.github.seijuro.publicdata.property.PyramidSellingDetailProperty;
-import com.github.seijuro.publicdata.property.PyramidSellingDetailPropertyUtils;
+import com.github.seijuro.publicdata.property.PyramidSellerDetailProperty;
+import com.github.seijuro.publicdata.property.PyramidSellerDetailPropertyUtils;
 import com.github.seijuro.publicdata.result.PublicDataAPIResult;
-import com.github.seijuro.publicdata.result.PyramidSellingDetailAPIResult;
-import com.github.seijuro.publicdata.result.item.PyramidSellingDetailData;
+import com.github.seijuro.publicdata.result.PyramidSellerDetailAPIResult;
+import com.github.seijuro.publicdata.result.item.PyramidSellerDetailData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PyramidSellingDetailAPIResponseParser extends PublicDataAPIResponseXMLParser {
+public class PyramidSellerDetailAPIResponseParser extends PublicDataAPIResponseXMLParser {
     /**
      * Instance Properties
      */
-    protected PyramidSellingDetailData.Builder dataBuilder = null;
-    protected List<PyramidSellingDetailData> dataList = null;
+    protected PyramidSellerDetailData.Builder dataBuilder = null;
+    protected List<PyramidSellerDetailData> dataList = null;
 
     /**
      * Construct <code>PyramidSellingDetailAPIResponseParser</code> instance.
      */
-    public PyramidSellingDetailAPIResponseParser() {
+    public PyramidSellerDetailAPIResponseParser() {
     }
 
     @Override
@@ -33,19 +33,19 @@ public class PyramidSellingDetailAPIResponseParser extends PublicDataAPIResponse
     @Override
     protected boolean handleTagBegin(String tag) {
         if (!super.handleTagBegin(tag)) {
-            if (PyramidSellingDetailPropertyUtils.Item.contains(tag)) {
+            if (PyramidSellerDetailPropertyUtils.Item.contains(tag)) {
                 return true;
             }
-            else if (PyramidSellingDetailProperty.ITEM.equals(tag)) {
+            else if (PyramidSellerDetailProperty.ITEM.equals(tag)) {
                 //  create builder object
-                this.dataBuilder = new PyramidSellingDetailData.Builder();
+                this.dataBuilder = new PyramidSellerDetailData.Builder();
 
                 return true;
             }
-            else if (PyramidSellingDetailProperty.ITEMS.equals(tag)) {
+            else if (PyramidSellerDetailProperty.ITEMS.equals(tag)) {
                 return true;
             }
-            else if (PyramidSellingDetailProperty.BODY.equals(tag)) {
+            else if (PyramidSellerDetailProperty.BODY.equals(tag)) {
                 //  create container
                 this.dataList = new ArrayList<>();
                 return true;
@@ -58,42 +58,42 @@ public class PyramidSellingDetailAPIResponseParser extends PublicDataAPIResponse
     @Override
     protected boolean handleTagEnd(String tag, String value) {
         if (!super.handleTagEnd(tag, value)) {
-            if (PyramidSellingDetailPropertyUtils.Item.contains(tag)) {
-                int code = PyramidSellingDetailPropertyUtils.Item.getCode(tag, Integer.MIN_VALUE);
+            if (PyramidSellerDetailPropertyUtils.Item.contains(tag)) {
+                int code = PyramidSellerDetailPropertyUtils.Item.getCode(tag, Integer.MIN_VALUE);
 
                 assert (code != Integer.MIN_VALUE);
                 assert (dataBuilder != null);
 
                 switch (code) {
-                    case PyramidSellingDetailProperty.ItemCode.IC_SEQUENCE_ID:
+                    case PyramidSellerDetailProperty.ItemCode.IC_SEQUENCE_ID:
                         dataBuilder.setSequenceId(value);
                         return true;
-                    case PyramidSellingDetailProperty.ItemCode.IC_COMPANY_NAME:
+                    case PyramidSellerDetailProperty.ItemCode.IC_COMPANY_NAME:
                         dataBuilder.setCompanyName(value);
                         return true;
-                    case PyramidSellingDetailProperty.ItemCode.IC_SERIAL_NUMBER:
+                    case PyramidSellerDetailProperty.ItemCode.IC_SERIAL_NUMBER:
                         dataBuilder.setSerialNumber(value);
                         return true;
-                    case PyramidSellingDetailProperty.ItemCode.IC_REPRESENTATIVE:
+                    case PyramidSellerDetailProperty.ItemCode.IC_REPRESENTATIVE:
                         dataBuilder.setRepresentative(value);
                         return true;
-                    case PyramidSellingDetailProperty.ItemCode.IC_DATE_OF_APPROVAL:
+                    case PyramidSellerDetailProperty.ItemCode.IC_DATE_OF_APPROVAL:
                         dataBuilder.setDateOfApproval(value);
                         return true;
-                    case PyramidSellingDetailProperty.ItemCode.IC_ADDRESS:
+                    case PyramidSellerDetailProperty.ItemCode.IC_ADDRESS:
                         dataBuilder.setAddress(value);
                         return true;
-                    case PyramidSellingDetailProperty.ItemCode.IC_CAPITTAL:
+                    case PyramidSellerDetailProperty.ItemCode.IC_CAPITTAL:
                         dataBuilder.setCapital(value);
                         return true;
-                    case PyramidSellingDetailProperty.ItemCode.IC_STATUS:
+                    case PyramidSellerDetailProperty.ItemCode.IC_STATUS:
                         dataBuilder.setStatus(value);
                         return true;
                     default:
                         break;
                 }
             }
-            else if (PyramidSellingDetailProperty.ITEM.equals(tag)) {
+            else if (PyramidSellerDetailProperty.ITEM.equals(tag)) {
                 assert (this.dataList != null);
                 assert (this.dataBuilder != null);
 
@@ -102,12 +102,12 @@ public class PyramidSellingDetailAPIResponseParser extends PublicDataAPIResponse
 
                 return true;
             }
-            else if (PyramidSellingDetailProperty.ITEMS.equals(tag)) {
+            else if (PyramidSellerDetailProperty.ITEMS.equals(tag)) {
                 //  do nothing
 
                 return true;
             }
-            else if (PyramidSellingDetailProperty.BODY.equals(tag)) {
+            else if (PyramidSellerDetailProperty.BODY.equals(tag)) {
                 //  do nothing
 
                 return true;
@@ -120,7 +120,7 @@ public class PyramidSellingDetailAPIResponseParser extends PublicDataAPIResponse
     @Override
     protected PublicDataAPIResult createResult() {
         if (!hasError()) {
-            PublicDataAPIResult result = new PyramidSellingDetailAPIResult(super.createResult());
+            PublicDataAPIResult result = new PyramidSellerDetailAPIResult(super.createResult());
             result.addData(this.dataList);
 
             return result;

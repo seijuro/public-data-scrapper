@@ -2,27 +2,46 @@ package com.github.seijuro.publicdata.result.item;
 
 import com.github.seijuro.publicdata.property.NPSProperty;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Consumer;
 
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class BusinessPlaceDetailData extends BusinessPlaceData {
+public class BusinessPlaceDetailData extends PublicData {
     /**
      * Instance Properties
      */
-    @Getter(AccessLevel.PUBLIC)
-    private final String businessTypeName;
-    @Getter(AccessLevel.PUBLIC)
-    private final String businessTypeCode;
-    @Getter(AccessLevel.PUBLIC)
+    @Getter
+    private final Integer sequenceId;
+    @Getter
+    private final String type;
+    @Getter
     private final String registrationDate;
-    @Getter(AccessLevel.PUBLIC)
+    @Getter
     private final String withdrawalDate;
-    @Getter(AccessLevel.PUBLIC)
-    private final String subscriberNumber;
-    @Getter(AccessLevel.PUBLIC)
-    private final String notifiedAmountOfThisMonth;
+    @Getter
+    private final String numberOfSubscriber;
+    @Getter
+    private final String notifiedAmount;
+    @Getter
+    private final String name;
+    @Getter
+    private final String registrationNumber;
+    @Getter
+    private final String addressRoad;
+    @Getter
+    private final String statusCode;
+    @Getter
+    private final String addressDG;
+    @Getter
+    private final String addressSGGU;
+    @Getter
+    private final String addressEMD;
+    @Getter
+    private final String divisionCode;
+    @Getter
+    private final String typeCode;
 
     /**
      * C'tor
@@ -32,49 +51,60 @@ public class BusinessPlaceDetailData extends BusinessPlaceData {
     protected BusinessPlaceDetailData(Builder builder) {
         super(builder);
 
-        this.businessTypeName = builder.businessTypeName;
-        this.businessTypeCode = builder.businessTypeCode;
-        this.registrationDate = builder.registrationDate;
-        this.withdrawalDate = builder.withdrawalDate;
-        this.subscriberNumber = builder.subscriberNumber;
-        this.notifiedAmountOfThisMonth = builder.notifiedAmountOfThisMonth;
-    }
-
-    @Override
-    public void prettyPrint(Consumer<String> consumer) {
-        super.prettyPrint(consumer);
-
-        StringBuffer sb = new StringBuffer();
-        sb.append("\t[detail]")
-                .append("\t").append(NPSProperty.Item.Detail.BUSINESSTYPE_NAME).append(" : [").append(this.businessTypeName).append("]\n")
-                .append("\t").append(NPSProperty.Item.Detail.BUSINESSTYPE_CODE).append(" : [").append(this.businessTypeCode).append("]\n")
-                .append("\t").append(NPSProperty.Item.Detail.REGISTRATION_DATE).append(" : [").append(this.registrationDate).append("]\n")
-                .append("\t").append(NPSProperty.Item.Detail.WITHDRAWAL_DATE).append(" : [").append(this.withdrawalDate).append("]\n")
-                .append("\t").append(NPSProperty.Item.Detail.SUBSCRIBER_NUMBER).append(" : [").append(this.subscriberNumber).append("]\n")
-                .append("\t").append(NPSProperty.Item.Detail.NOTIFIED_AMOUNT_OF_THIS_MONTH).append(" : [").append(this.notifiedAmountOfThisMonth).append("]");
-
-        consumer.accept(sb.toString());
+        sequenceId = builder.sequenceId;
+        type = builder.type;
+        registrationDate = builder.registrationDate;
+        withdrawalDate = builder.withdrawalDate;
+        numberOfSubscriber = builder.numberOfSubscriber;
+        notifiedAmount = builder.notifiedAmount;
+        name = builder.name;
+        registrationNumber = builder.registrationNumber;
+        addressRoad = builder.addressRoad;
+        statusCode = builder.statusCode;
+        addressDG = builder.addressDG;
+        addressSGGU = builder.addressSGGU;
+        addressEMD = builder.addressEMD;
+        divisionCode = builder.divisionCode;
+        typeCode = builder.typeCode;
     }
 
     /**
      * Builder Pattern class
      */
-    public static class Builder extends BusinessPlaceData.Builder {
+    public static class Builder extends PublicData.Builder {
         /**
          * Instance Properties
          */
-        @Setter(AccessLevel.PUBLIC)
-        private String businessTypeName = null;
-        @Setter(AccessLevel.PUBLIC)
-        private String businessTypeCode = null;
-        @Setter(AccessLevel.PUBLIC)
-        private String registrationDate = null;
-        @Setter(AccessLevel.PUBLIC)
-        private String withdrawalDate = null;
-        @Setter(AccessLevel.PUBLIC)
-        private String subscriberNumber = null;
-        @Setter(AccessLevel.PUBLIC)
-        private String notifiedAmountOfThisMonth = null;
+        @Setter
+        private Integer sequenceId = null;
+        @Setter
+        private String type = StringUtils.EMPTY;
+        @Setter
+        private String registrationDate = StringUtils.EMPTY;
+        @Setter
+        private String withdrawalDate = StringUtils.EMPTY;
+        @Setter
+        private String numberOfSubscriber = StringUtils.EMPTY;
+        @Setter
+        private String notifiedAmount = StringUtils.EMPTY;
+        @Setter
+        private String name = StringUtils.EMPTY;
+        @Setter
+        private String registrationNumber = StringUtils.EMPTY;
+        @Setter
+        private String addressRoad = StringUtils.EMPTY;
+        @Setter
+        private String statusCode = StringUtils.EMPTY;
+        @Setter
+        private String addressDG = StringUtils.EMPTY;
+        @Setter
+        private String addressSGGU = StringUtils.EMPTY;
+        @Setter
+        private String addressEMD = StringUtils.EMPTY;
+        @Setter
+        private String divisionCode = StringUtils.EMPTY;
+        @Setter
+        private String typeCode = StringUtils.EMPTY;
 
         /**
          * Builder Pattern method

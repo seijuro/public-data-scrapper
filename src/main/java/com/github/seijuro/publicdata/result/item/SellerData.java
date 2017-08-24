@@ -2,6 +2,7 @@ package com.github.seijuro.publicdata.result.item;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -84,7 +85,7 @@ public class SellerData extends PublicData {
     @Getter
     private final String status;
     @Getter
-    private final DateTime filingDate;
+    private final String filingDate;
     @Getter
     private final String domain;
 
@@ -102,7 +103,7 @@ public class SellerData extends PublicData {
         state = builder.state;
         companyName = builder.companyName;
         representative = builder.representative;
-        status = builder.status.codeString();
+        status = builder.status != null ? builder.status.codeString() : StringUtils.EMPTY;
         filingDate = builder.filingDate;
         domain = builder.domain;
     }
@@ -110,9 +111,8 @@ public class SellerData extends PublicData {
     /**
      * Builder Pattern class
      */
+    @ToString
     public static class Builder extends PublicData.Builder {
-        static final DateTimeFormatter df = DateTimeFormat.forPattern("yyyyMMdd");
-
         /**
          * Instance Properties
          */
@@ -126,7 +126,7 @@ public class SellerData extends PublicData {
         @Setter
         private String representative = StringUtils.EMPTY;
         private Status status = null;
-        private DateTime filingDate = null;
+        private String filingDate = null;
         @Setter
         private String domain = StringUtils.EMPTY;
 
@@ -146,13 +146,11 @@ public class SellerData extends PublicData {
                 return;
             }
 
-            throw new IllegalArgumentException(String.format("Param, %s, is illegal(stats : [\"01\" ~ \"08\"]).", value));
+            throw new IllegalArgumentException(String.format("Param, %s, is illegal(stats must be in the range [\"01\" ~ \"08\"]).", value));
         }
 
         public void setFilingDate(String value) {
-            Objects.requireNonNull(value);
-
-            filingDate = DateTime.parse(value, df);
+            filingDate = StringUtils.stripToEmpty(value);
         }
 
         /**

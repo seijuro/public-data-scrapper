@@ -1,6 +1,6 @@
 package com.github.seijuro.publicdata.result;
 
-public class PyramidSellingDetailAPIResult extends PublicDataAPIResult {
+public class PyramidSellerDetailAPIResult extends PublicDataAPIResult {
     /**
      * C'tor
      *
@@ -10,7 +10,7 @@ public class PyramidSellingDetailAPIResult extends PublicDataAPIResult {
      * @param $numOfRows
      * @param $totalCount
      */
-    public PyramidSellingDetailAPIResult(String $resultCode, String $resultMesg, Integer $pageNo, Integer $numOfRows, Integer $totalCount) {
+    public PyramidSellerDetailAPIResult(String $resultCode, String $resultMesg, Integer $pageNo, Integer $numOfRows, Integer $totalCount) {
         super($resultCode, $resultMesg, $pageNo, $numOfRows, $totalCount);
     }
 
@@ -20,7 +20,7 @@ public class PyramidSellingDetailAPIResult extends PublicDataAPIResult {
      * @param parent
      * @param <T>
      */
-    public <T extends PublicDataAPIResult> PyramidSellingDetailAPIResult(T parent) {
+    public <T extends PublicDataAPIResult> PyramidSellerDetailAPIResult(T parent) {
         super(parent.getResultCode(), parent.getResultMessage(), parent.getPageNo(), parent.getNumberOfRows(), parent.getTotalCount());
     }
 }

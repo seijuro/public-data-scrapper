@@ -1,6 +1,6 @@
 package com.github.seijuro.publicdata.property;
 
-public class PyramidSellingProperty {
+public class PyramidSellerProperty {
     static class CodePrefix {
         static final int IC_PREFIX = 0x00080000;
     }

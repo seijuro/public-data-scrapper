@@ -14,7 +14,7 @@ public class PublicDataAPIResponseParserFactory {
             return new BusinessPlaceInfoAPIResponseParser();
         }
         else if (type == PublicDataAPIServices.NPS_BUSINESS_PLACE_DETAIL) {
-            return new BusinessPlaceDetailInfoAPIResponseParser();
+            return new BusinessPlaceDetailAPIResponseParser();
         }
         else if (type == PublicDataAPIServices.NPS_STATS) {
             return new StatsAPIResponseParser();
@@ -40,11 +40,11 @@ public class PublicDataAPIResponseParserFactory {
         else if (type == PublicDataAPIServices.THE_USE_OF_ELECTROCITY) {
             return new TheUseOfElectrocityAPIResponseParser();
         }
-        else if (type == PublicDataAPIServices.PYRAMID_SELLING) {
-            return new PyramidSellingAPIResponseParser();
+        else if (type == PublicDataAPIServices.PYRAMID_SELLER) {
+            return new PyramidSellerAPIResponseParser();
         }
-        else if (type == PublicDataAPIServices.PYRAMID_SELLING_DEATIL) {
-            return new PyramidSellingDetailAPIResponseParser();
+        else if (type == PublicDataAPIServices.PYRAMID_SELLER_DEATIL) {
+            return new PyramidSellerDetailAPIResponseParser();
         }
         else if (type == PublicDataAPIServices.TELE_MARKETING_SELLER) {
             return new TeleMarketingSellerAPIResponseParser();

@@ -8,23 +8,23 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
-public class PyramidSellingDetailData extends PyramidSellingData {
+public class PyramidSellerDetailData extends PyramidSellerData {
     /**
      * Instance Properties
      */
     @Getter(AccessLevel.PUBLIC)
-    private final Long capital;
+    private final String capital;
     @Getter(AccessLevel.PUBLIC)
     private final String address;
     @Getter(AccessLevel.PUBLIC)
-    private final Integer status;
+    private final String status;
 
     /**
      * Construct
      *
      * @param builder
      */
-    protected PyramidSellingDetailData(Builder builder) {
+    protected PyramidSellerDetailData(Builder builder) {
         super(builder);
 
         capital = builder.capital;
@@ -33,31 +33,22 @@ public class PyramidSellingDetailData extends PyramidSellingData {
     }
 
     @ToString
-    public static class Builder extends PyramidSellingData.Builder {
-        private Long capital = null;
+    public static class Builder extends PyramidSellerData.Builder {
+        @Setter
+        private String capital = null;
         @Setter
         private String address = StringUtils.EMPTY;
-        private Integer status = null;
+        @Setter
+        private String status = null;
 
-        public void setCapital(String value) {
-            Objects.requireNonNull(value);
-
-            capital = Long.parseLong(value);
-        }
-
-        public void setStatus(String status) {
-            Objects.requireNonNull(status);
-
-            this.status = Integer.parseInt(status);
-        }
 
         /**
          * Builder Pattern method
          *
          * @return
          */
-        public PyramidSellingDetailData build() {
-            return new PyramidSellingDetailData(this);
+        public PyramidSellerDetailData build() {
+            return new PyramidSellerDetailData(this);
         }
     }
 }

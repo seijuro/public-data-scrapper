@@ -6,7 +6,7 @@ import lombok.Getter;
 
 public class TeleMarketingSellerAPI extends PublicDataAPI {
     @Getter(AccessLevel.PUBLIC)
-    public static final String serviceURL = "http://apis.data.go.kr/1130000/MllInfoService/getMllSttemntInfo";
+    public static final String serviceURL = "http://apis.data.go.kr/1130000/MllInfoService/getMllSttemntInfo";      //  tm
 
     /**
      * C'tor

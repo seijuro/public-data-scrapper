@@ -73,7 +73,7 @@ public class SellerAPIResponseParser extends PublicDataAPIResponseXMLParser {
                         this.dataBuilder.setRepresentative(value);
                         return true;
                     case SellerProperty.ItemCode.IC_STATUS:
-                        this.dataBuilder.setState(value);
+                        this.dataBuilder.setStatus(value);
                         return true;
                     case SellerProperty.ItemCode.IC_FILING_DATE:
                         this.dataBuilder.setFilingDate(value);

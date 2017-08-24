@@ -10,9 +10,6 @@ class NPSDataBuilderFactory {
         if (Clazz == BusinessPlaceData.Builder.class) {
             return new BusinessPlaceData.Builder();
         }
-        else if (Clazz == BusinessPlaceDetailData.Builder.class) {
-            return new BusinessPlaceDetailData.Builder();
-        }
         else if (Clazz == StatsData.Builder.class) {
             return new StatsData.Builder();
         }

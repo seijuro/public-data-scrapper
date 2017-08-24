@@ -10,7 +10,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 @ToString
-public class PyramidSellingData extends PublicData {
+public class PyramidSellerData extends PublicData {
     /**
      * Instance Properties
      */
@@ -30,7 +30,7 @@ public class PyramidSellingData extends PublicData {
      *
      * @param builder
      */
-    protected PyramidSellingData(Builder builder) {
+    protected PyramidSellerData(Builder builder) {
         super(builder);
 
         sequenceId = builder.sequenceId;
@@ -78,8 +78,8 @@ public class PyramidSellingData extends PublicData {
          * @return
          */
         @Override
-        public PyramidSellingData build() {
-            return new PyramidSellingData(this);
+        public PyramidSellerData build() {
+            return new PyramidSellerData(this);
         }
     }
 }

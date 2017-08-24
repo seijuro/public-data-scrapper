@@ -15,5 +15,5 @@ public interface PublicDataAPIResultHandler {
     }
 
     public abstract void handleResult(String url, Properties params, String response, PublicDataAPIResult result);
-    public abstract void handleErrorResult(String url, Properties params, String response, PublicDataAPIErrorResult result);
+    public abstract void handleErrorResult(String url, String serviceKey, Properties params, String response, PublicDataAPIErrorResult result);
 }

@@ -4,7 +4,7 @@ import com.github.seijuro.publicdata.property.PublicDataProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-public class PyramidSellingAPIConfig extends PublicDataAPIConfig {
+public class PyramidSellerAPIConfig extends PublicDataAPIConfig {
     public enum Property implements ConfigProperty {
         NUM_OF_ROWS(PublicDataProperty.Request.NUM_OF_ROWS),
         PAGE_NO(PublicDataProperty.Request.PAGE_NO),
@@ -81,7 +81,7 @@ public class PyramidSellingAPIConfig extends PublicDataAPIConfig {
     /**
      * C'tor
      */
-    public PyramidSellingAPIConfig() {
+    public PyramidSellerAPIConfig() {
         super();
     }
 }
