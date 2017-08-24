@@ -71,6 +71,7 @@ public class BusinessPlaceDetailData extends PublicData {
     /**
      * Builder Pattern class
      */
+    @ToString
     public static class Builder extends PublicData.Builder {
         /**
          * Instance Properties

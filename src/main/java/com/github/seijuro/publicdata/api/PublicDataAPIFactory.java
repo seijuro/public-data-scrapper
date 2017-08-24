@@ -12,7 +12,7 @@ public class PublicDataAPIFactory {
             return new BusinessPlaceDetailInfoAPI();
         }
         else if (type == PublicDataAPIServices.NPS_STATS) {
-            return new StatsAPI();
+            return new NPSReportAPI();
         }
         else if (type == PublicDataAPIServices.SPEC_CONSTRUCT) {
             return new ConstructSpecificationInfoAPI();

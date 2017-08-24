@@ -66,26 +66,6 @@ public class PublicDataAPIFactoryTest {
     }
 
     @Test
-    public void testCreateStatsAPI() {
-        try {
-            StatsAPIConfig config = new StatsAPIConfig();
-            PublicDataAPI api = PublicDataAPIFactory.create(PublicDataAPIServices.NPS_STATS);
-            api.setConfig(config);
-            api.setServiceKey(sampleServiceKey);
-
-            assertNotNull(api);
-            assertEquals(StatsAPI.class, api.getClass());
-
-            return;
-        }
-        catch (Exception excp) {
-            excp.printStackTrace();
-        }
-
-        assertTrue(false);
-    }
-
-    @Test
     public void testCreateConstructSpecificationInfoAPI() {
         try {
             SpecificationAPIConfig config = new SpecificationAPIConfig();

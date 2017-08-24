@@ -17,7 +17,7 @@ public class PublicDataAPIResponseParserFactory {
             return new BusinessPlaceDetailAPIResponseParser();
         }
         else if (type == PublicDataAPIServices.NPS_STATS) {
-            return new StatsAPIResponseParser();
+            return new NPSReportAPIResponseParser();
         }
         else if (type == PublicDataAPIServices.SPEC_CONSTRUCT ||
                 type == PublicDataAPIServices.SPEC_FOREIGNCAPITAL ||

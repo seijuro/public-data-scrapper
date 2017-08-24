@@ -5,6 +5,7 @@ import com.github.seijuro.publicdata.property.BusinessPlaceDetailPropertyUtils;
 import com.github.seijuro.publicdata.result.BusinessPlaceDetailAPIResult;
 import com.github.seijuro.publicdata.result.PublicDataAPIResult;
 import com.github.seijuro.publicdata.result.item.BusinessPlaceDetailData;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class BusinessPlaceDetailAPIResponseParser extends PublicDataAPIResponseX
      */
     protected BusinessPlaceDetailData.Builder dataBuilder = null;
     protected List<BusinessPlaceDetailData> dataList = null;
+    @Setter
     protected Integer sequenceId = null;
 
     /**
@@ -58,7 +60,6 @@ public class BusinessPlaceDetailAPIResponseParser extends PublicDataAPIResponseX
                 assert (dataBuilder != null);
 
                 switch (code) {
-                    // details only
                     case BusinessPlaceDetailProperty.ItemCode.IC_TYPE:
                         dataBuilder.setType(value);
                         return true;
