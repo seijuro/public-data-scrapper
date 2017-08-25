@@ -142,8 +142,6 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
                     if (!requestState.isSuccess()) {
                         //  back-off
                         sleepMillis = requestState.getRetryAfter();
-
-                        System.out.println(String.format("[SLEEP] %d ms (back off)", sleepMillis));
                     }
 
                     Thread.sleep(sleepMillis);

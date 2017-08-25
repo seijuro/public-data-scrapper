@@ -166,8 +166,6 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
 
                 if (!requestState.isSuccess()) {
                     sleepMillis = requestState.getRetryAfter();
-
-                    System.out.println(String.format("[SLEEP] %d ms (back off)", sleepMillis));
                 }
 
                 Thread.sleep(sleepMillis);
@@ -215,7 +213,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
             api.setConfig(config);
 
             if (config != null) {
-                System.out.println(String.format("[HTTP] request ... (timeout : %d)", api.getReadTimeout()));
+//                System.out.println(String.format("[HTTP] request ... (timeout : %d)", api.getReadTimeout()));
 
                 RestfulAPIResponse response = api.request();
                 String url = api.getRequestURL();
