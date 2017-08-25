@@ -14,5 +14,5 @@ public interface PublicDataAPIServiceKeySupplier {
      * @param apiService
      * @return
      */
-    public abstract String getServiceKey(PublicDataAPIServices apiService);
+    public abstract String getServiceKey(PublicDataAPIServices apiService) throws InterruptedException;
 }
