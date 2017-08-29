@@ -35,6 +35,8 @@ import java.util.Properties;
 public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitCheckable, PublicDataAPIServiceKeySupplier, IPublicDataAPIConfigSupplier {
     @Getter
     private static final long DefaultSleepSeconds = 3L;
+    @Getter
+    private static final long MaxBackOffSleepSeconds = 125L;
 
     /**
      * enum RunningState
@@ -68,7 +70,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
         }
 
         public long getRetryAfter() {
-            retryAfter *= 5L;
+            retryAfter = Math.min(retryAfter * 5L, getMaxBackOffSleepSeconds());
             return retryAfter * DateUtils.MILLIS_PER_SECOND;
         }
 
