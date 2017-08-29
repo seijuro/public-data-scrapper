@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Properties;
@@ -32,11 +33,14 @@ import java.util.Properties;
  * {@link PublicDataAPIServiceKeySupplier}
  * {@link IPublicDataAPIConfigSupplier}
  */
+@Log4j2
 public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitCheckable, PublicDataAPIServiceKeySupplier, IPublicDataAPIConfigSupplier {
     @Getter
     private static final long DefaultSleepSeconds = 3L;
+
+    //  TODO set back to '125L'
     @Getter
-    private static final long MaxBackOffSleepSeconds = 125L;
+    private static final long MaxBackOffSleepSeconds = 3L;
 
     /**
      * enum RunningState
@@ -147,9 +151,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
                 PublicDataAPIConfig config = getNextConfig();
 
                 if (config == null) {
-                    System.out.println("[INFO] next config is 'NULL'.");
-                    System.out.println("[INFO] stop thread ...");
-
+                    log.info("There are no more config (next config is 'NULL').");
                     stop();
 
                     return;
@@ -191,7 +193,8 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
             excp.printStackTrace();
         }
 
-        System.out.println("[INFO] stop thread ...");
+        //  Log
+        log.debug("reach to the end of the 'run' ... ");
     }
 
     /**
@@ -215,8 +218,6 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
             api.setConfig(config);
 
             if (config != null) {
-//                System.out.println(String.format("[HTTP] request ... (timeout : %d)", api.getReadTimeout()));
-
                 RestfulAPIResponse response = api.request();
                 String url = api.getRequestURL();
                 Properties props = config.getProperties();
@@ -270,6 +271,7 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
      */
     @Override
     public void handleHTTPResponse(String url, Properties params, int code, String response) {
+        //  do nothing.
     }
 
     /**
@@ -284,6 +286,9 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
      */
     @Override
     public void handleHTTPErrorResponse(String url, Properties params, int code, String response, String errmsg) {
+        //  Log
+        log.debug("update 'request' state -> success : [false], increment try-count.");
+
         requestState.setSuccess(false);
         requestState.incrementTry();
     }
@@ -300,6 +305,9 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
      */
     @Override
     public void handleResult(String url, Properties params, String response, PublicDataAPIResult result) {
+        //  Log
+        log.debug("update 'request' state -> success : [true]");
+
         requestState.setSuccess(true);
     }
 
@@ -315,15 +323,25 @@ public abstract class PublicDataAPITask implements PublicDataAPIRunnable, VisitC
      */
     @Override
     public void handleErrorResult(String url, String serviceKey, Properties params, String response, PublicDataAPIErrorResult result) {
+        //  Log
+        log.debug("update 'request' state -> success : [false], increment try-count.");
+
         requestState.setSuccess(false);
         requestState.incrementTry();
     }
 
     @Override
     public void shutdown() {
+        //  Log
+        log.info("shut down thread ...");
+
         this.runningState = RunningState.SHUTDOWN;
     }
 
     @Override
-    public void stop() { this.runningState = RunningState.STOP; }
+    public void stop() {
+        //  Log
+        log.info("stop thread ...");
+
+        this.runningState = RunningState.STOP; }
 }

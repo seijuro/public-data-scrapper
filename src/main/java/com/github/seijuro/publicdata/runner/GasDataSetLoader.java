@@ -1,10 +1,8 @@
 package com.github.seijuro.publicdata.runner;
 
 import com.github.seijuro.common.jdbc.MySQLConnectionString;
-import com.github.seijuro.db.writer.TheUseOfElectrocityWritter;
-import com.github.seijuro.db.writer.TheUseOfGasWritter;
+import com.github.seijuro.db.writer.TheUseOfGasWriter;
 import com.github.seijuro.publicdata.energy.gas.GasDataFileReader;
-import com.github.seijuro.publicdata.result.item.TheUseOfElectrocityData;
 import com.github.seijuro.publicdata.result.item.TheUseOfGasData;
 
 import java.io.Closeable;
@@ -58,7 +56,7 @@ public class GasDataSetLoader extends DataSetLoader implements Closeable, AutoCl
 
             TheUseOfGasData datum;
             List<TheUseOfGasData> data = new ArrayList<>();
-            TheUseOfGasWritter writter = new TheUseOfGasWritter(connection);
+            TheUseOfGasWriter writter = new TheUseOfGasWriter(connection);
 
             while ((datum = reader.readData()) != null) {
                 data.add(datum);

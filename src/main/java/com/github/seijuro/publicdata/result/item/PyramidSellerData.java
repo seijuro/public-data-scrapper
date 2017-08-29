@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -43,6 +44,7 @@ public class PyramidSellerData extends PublicData {
     /**
      * Builder Pattern class
      */
+    @Log4j2
     @ToString
     public static class Builder extends PublicData.Builder {
         /**
@@ -62,7 +64,9 @@ public class PyramidSellerData extends PublicData {
                 sequenceId = Integer.parseInt(seq);
             }
             catch (NumberFormatException excp) {
-                System.out.println(String.format("[CHECK] Param, seq, is [%s]", seq));
+                //  Log
+                log.error("converting data type from 'String' to 'Integer' failed -> seq : {}", seq);
+
                 excp.printStackTrace();
             }
         }

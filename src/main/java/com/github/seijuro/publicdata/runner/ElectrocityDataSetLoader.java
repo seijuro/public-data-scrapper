@@ -1,7 +1,7 @@
 package com.github.seijuro.publicdata.runner;
 
 import com.github.seijuro.common.jdbc.MySQLConnectionString;
-import com.github.seijuro.db.writer.TheUseOfElectrocityWritter;
+import com.github.seijuro.db.writer.TheUseOfElectrocityWriter;
 import com.github.seijuro.publicdata.energy.electrocity.ElectrocityDataFileReader;
 import com.github.seijuro.publicdata.result.item.TheUseOfElectrocityData;
 
@@ -56,7 +56,7 @@ public class ElectrocityDataSetLoader extends DataSetLoader implements Closeable
 
             TheUseOfElectrocityData datum;
             List<TheUseOfElectrocityData> data = new ArrayList<>();
-            TheUseOfElectrocityWritter writter = new TheUseOfElectrocityWritter(connection);
+            TheUseOfElectrocityWriter writter = new TheUseOfElectrocityWriter(connection);
 
             while ((datum = reader.readData()) != null) {
                 data.add(datum);

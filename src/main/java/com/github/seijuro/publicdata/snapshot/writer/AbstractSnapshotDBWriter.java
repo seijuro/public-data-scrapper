@@ -8,7 +8,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
 
-public abstract class AbstractSnapshotDBWriter implements AbstractSnapshotWriter, Closeable, AutoCloseable {
+public abstract class AbstractSnapshotDBWriter implements AbstractSnapshotWriter, Closeable {
     /**
      * Instance Properties
      */

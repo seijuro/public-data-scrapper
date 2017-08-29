@@ -9,10 +9,12 @@ import com.github.seijuro.publicdata.result.PublicDataAPIResult;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Properties;
 
+@Log4j2
 public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
     @ToString
     protected class PagingState {
@@ -93,7 +95,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
             excp.printStackTrace();
         }
 
-        System.out.println("[INFO] stop thread ...");
+        log.debug("reach to the end of 'run' ...");
     }
 
     @Override
@@ -151,6 +153,7 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
             } while (pageState.hasMorePage() && runningState == RunningState.RUNNING);
         }
         catch (TaskExeption excp) {
+            excp.printStackTrace();
         }
     }
 
@@ -168,7 +171,8 @@ public abstract class PublicDataAPIPageableTask extends PublicDataAPITask {
     public void handleResult(String url, Properties props, String response, PublicDataAPIResult result) {
         super.handleResult(url, props, response, result);
 
-        System.out.println(String.format("result := {no : %d, size : %d, total : %d}", result.getPageNo(), result.getNumberOfRows(), result.getTotalCount()));
+        //  Log
+        log.debug("update page-state -> current page : {}, the number of rows : {}, total count : {}", result.getPageNo(), result.getNumberOfRows(), result.getTotalCount());
 
         pageState.setCurrentPage(result.getPageNo());
         pageState.setCurrentResult(result.getNumberOfRows());

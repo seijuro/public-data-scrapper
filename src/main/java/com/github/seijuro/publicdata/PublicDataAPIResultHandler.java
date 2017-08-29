@@ -11,11 +11,11 @@ public interface PublicDataAPIResultHandler {
     Logger logger = LoggerFactory.getLogger(PublicDataAPIResultHandler.class);
 
     default void handleHTTPResponse(String url, Properties params, int code, String response) {
-        logger.info("status : {} -> url : {}, params : {}", code, url, params);
+        logger.debug("status : {} -> url : {}, params : {}", code, url, params);
     }
 
     default void handleHTTPErrorResponse(String url, Properties params, int code, String response, String errmsg) {
-        logger.error("status : {}, msg : {} -> url : {}, params : {}", code, errmsg, url, params);
+        logger.debug("status : {}, msg : {} -> url : {}, params : {}", code, errmsg, url, params);
     }
 
     public abstract void handleResult(String url, Properties params, String response, PublicDataAPIResult result);

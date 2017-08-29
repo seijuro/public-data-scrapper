@@ -9,7 +9,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public abstract class PublicDataAPILoopTask extends PublicDataAPITask {
     /**
      * C'tor
@@ -31,6 +33,6 @@ public abstract class PublicDataAPILoopTask extends PublicDataAPITask {
             excp.printStackTrace();
         }
 
-        System.out.println("[INFO] stop thread ...");
+        log.info("terminating task-loop ...");
     }
 }

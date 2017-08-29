@@ -2,7 +2,9 @@ package com.github.seijuro.publicdata.runner;
 
 import com.github.seijuro.publicdata.PublicDataAPIException;
 import com.github.seijuro.publicdata.PublicDataAPIServices;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public abstract class PublicDataAPIPageableLoopTask extends PublicDataAPIPageableTask {
     /**
      * C'tor
@@ -25,6 +27,7 @@ public abstract class PublicDataAPIPageableLoopTask extends PublicDataAPIPageabl
             excp.printStackTrace();
         }
 
-        System.out.println("[INFO] stop thread ...");
+        //  Log
+        log.debug("reach to the end of 'run' ...");
     }
 }

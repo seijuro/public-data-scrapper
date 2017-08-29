@@ -3,13 +3,18 @@
 <configuration status="DEBUG">
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}= %msg%n" />
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} = %msg%n" />
         </Console>
+
+        <File name="LogFile" fileName="/tmp/public-data-scraper.log" immediateFlush="true" append="true">
+            <PAtternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} = %msg%n" />
+        </File>
     </appenders>
 
     <loggers>
-        <root level="info">
-            <appender-ref ref="Console" />
+        <root level="DEBUG">
+            <appender-ref ref="Console" level="info" />
+            <appender-ref ref="LogFile" level="debug" />
         </root>
     </loggers>
 

@@ -7,7 +7,7 @@ import java.io.Closeable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-public interface RecordWriter<T extends PublicData> extends Closeable, AutoCloseable {
+public interface RecordWriter<T extends PublicData> extends Closeable {
     public abstract void write(List<T> data);
 
     default void write(PublicDataAPIResult result) {
